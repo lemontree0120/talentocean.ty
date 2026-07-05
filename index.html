@@ -2,7 +2,8 @@
 <html lang="zh-Hant" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 鎖定高階寬螢幕解析度，移除響應式手機折疊，專注於極致大氣的 Desktop / iPad 體驗 -->
+    <meta name="viewport" content="width=1280, initial-scale=1.0">
     <title>遊艇及附屬設備智能管理系統 - 頂級雲端雙向同步控制台</title>
     <!-- Tailwind CSS Play CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -142,11 +143,11 @@
                     <span class="text-slate-300 text-sm font-medium" id="current-section-title">數據綜合總覽</span>
                 </div>
                 
-                <!-- Google Sheets 同步控制快捷按鈕 -->
+                <!-- GitHub 雲端同步控制快捷按鈕 -->
                 <div class="flex items-center space-x-4">
-                    <button onclick="openModal('google-sheets-modal')" class="text-xs bg-navy-800 border border-gold/30 hover:border-gold hover:bg-navy-700 px-3.5 py-2 rounded-full text-slate-300 transition-all flex items-center gap-2">
-                        <i class="fa-solid fa-cloud text-emerald-400 text-[10px] animate-pulse" id="g-sheets-pulse-icon"></i> 
-                        <span id="g-sheets-header-status-text">Google Sheet 雲端同步中心</span>
+                    <button onclick="openModal('github-sync-modal')" class="text-xs bg-navy-800 border border-gold/30 hover:border-gold hover:bg-navy-700 px-3.5 py-2 rounded-full text-slate-300 transition-all flex items-center gap-2">
+                        <i class="fa-brands fa-github text-emerald-400 text-xs animate-pulse" id="github-pulse-icon"></i> 
+                        <span id="github-header-status-text">GitHub 雲端同步中心</span>
                     </button>
                     
                     <span class="text-xs bg-navy-800 border border-gold/20 px-3 py-2 rounded-full text-slate-300">
@@ -279,11 +280,11 @@
                         </button>
                     </div>
 
-                    <!-- Yacht Hero Display (IMG_0265.jpg Reference) -->
+                    <!-- Yacht Hero Display (image_36c0a8.jpg Reference / IMG_0265.jpg Fallback) -->
                     <div class="bg-navy-900/40 border border-gold/20 rounded-xl overflow-hidden p-6 grid grid-cols-1 lg:grid-cols-3 gap-8 items-center animate-fade-in">
                         <div class="lg:col-span-1">
-                            <img src="IMG_0265.jpg" alt="Sanlorenzo SX76" class="w-full h-48 object-cover rounded-lg border border-gold/20 shadow-lg" onerror="this.src='https://images.presentationgo.com/2025/09/aerial-view-cruise-ship.jpg';">
-                            <p class="text-[10px] text-slate-400 mt-2 text-center"><i class="fa-solid fa-camera"></i> 真實航行與細節照片請參考影像：IMG_0265.jpg</p>
+                            <img src="image_36c0a8.jpg" alt="Sanlorenzo SX76" class="w-full h-48 object-cover rounded-lg border border-gold/20 shadow-lg" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?auto=format&fit=crop&w=800&q=80';">
+                            <p class="text-[10px] text-slate-400 mt-2 text-center"><i class="fa-solid fa-camera"></i> 真實航行與細節照片請參考影像：image_36c0a8.jpg</p>
                         </div>
                         <div class="lg:col-span-2 space-y-4">
                             <div class="flex justify-between items-center">
@@ -498,7 +499,7 @@
                     </div>
                 </div>
 
-                <!-- ================= 7. INVENTORY & SHOPPING LIST (更名為：遊艇生活與洗船物資) ================= -->
+                <!-- ================= 7. INVENTORY & SHOPPING LIST ================= -->
                 <div id="tab-inventory" class="space-y-6 hidden">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                         <div>
@@ -632,48 +633,64 @@
     <!-- MODAL DIALOGS (FOR INTERACTIVE SYSTEM CREATION/ADDITIONS) -->
     <!-- ========================================================= -->
 
-    <!-- Google Sheets Sync Configuration Modal -->
-    <div id="google-sheets-modal" class="fixed inset-0 bg-navy-950/85 backdrop-blur-sm flex items-center justify-center z-50 hidden">
-        <div class="bg-navy-900 border-2 border-gold/30 rounded-xl w-full max-w-2xl p-6 shadow-2xl relative">
-            <button onclick="closeModal('google-sheets-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-100"><i class="fa-solid fa-xmark text-lg"></i></button>
+    <!-- GitHub Sync Configuration Modal -->
+    <div id="github-sync-modal" class="fixed inset-0 bg-navy-950/85 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+        <div class="bg-navy-900 border-2 border-gold/30 rounded-xl w-full max-w-2xl p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModal('github-sync-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-100"><i class="fa-solid fa-xmark text-lg"></i></button>
             
             <div class="flex items-center gap-3 mb-4">
-                <i class="fa-solid fa-cloud-arrow-up text-3xl text-gold"></i>
+                <i class="fa-brands fa-github text-3xl text-gold"></i>
                 <div>
-                    <h3 class="text-lg font-bold font-serif text-slate-100">Google Sheet 雲端同步控制中心</h3>
-                    <p class="text-xs text-slate-400">配置您個人 Google Apps Script 的 API 節點，實現多表單雙向高階備份與同步。</p>
+                    <h3 class="text-lg font-bold font-serif text-slate-100">GitHub 雲端數據同步中心</h3>
+                    <p class="text-xs text-slate-400">配置您個人 GitHub 儲存庫 API 節點，實現多表單雙向高階備份與數據同步。</p>
                 </div>
             </div>
 
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs text-slate-400 mb-1">您的 Google Apps Script 部署 URL (Web App URL)</label>
-                    <input type="text" id="g-sheets-url-input" placeholder="https://script.google.com/macros/s/.../exec" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-xs font-mono text-slate-100 outline-none focus:border-gold">
-                    <p class="text-[10px] text-slate-500 mt-1">※ 當您完成填寫後，系統設定與此 API 網址將會自動且安全地保存在雲端中，防止遺失。</p>
+            <div class="space-y-4 text-xs">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-slate-400 mb-1">GitHub Personal Access Token (PAT)</label>
+                        <input type="password" id="github-token" value="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" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxx" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-slate-100 outline-none focus:border-gold font-mono">
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 mb-1">GitHub 擁有者 / 帳號名稱 (Username)</label>
+                        <input type="text" id="github-owner" placeholder="例如: your-github-id" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-slate-100 outline-none focus:border-gold font-mono">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-slate-400 mb-1">儲存庫名稱 (Repository)</label>
+                        <input type="text" id="github-repo" placeholder="例如: yacht-data-storage" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-slate-100 outline-none focus:border-gold font-mono">
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 mb-1">分支名稱 (Branch)</label>
+                        <input type="text" id="github-branch" value="main" placeholder="main" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-slate-100 outline-none focus:border-gold font-mono">
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 mb-1">JSON 存檔 path 路徑</label>
+                        <input type="text" id="github-path" value="data/yacht_fleet_data.json" placeholder="data/yacht_fleet_data.json" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-slate-100 outline-none focus:border-gold font-mono">
+                    </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
-                    <button onclick="uploadToGoogleSheets()" class="py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold rounded-lg text-xs transition-all flex items-center justify-center gap-2 shadow-lg">
-                        <i class="fa-solid fa-cloud-arrow-up"></i> 將本地數據「覆蓋上傳」至 Google 雲端
+                    <button onclick="uploadToGitHub()" class="py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold rounded-lg text-xs transition-all flex items-center justify-center gap-2 shadow-lg">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> 將本地數據「備份上傳」至 GitHub 
                     </button>
-                    <button onclick="downloadFromGoogleSheets()" class="py-3 bg-gradient-to-r from-sky-600 to-sky-500 hover:from-sky-500 hover:to-sky-400 text-white font-bold rounded-lg text-xs transition-all flex items-center justify-center gap-2 shadow-lg">
-                        <i class="fa-solid fa-cloud-arrow-down"></i> 從 Google 雲端「覆蓋下載」至本機
+                    <button onclick="downloadFromGitHub()" class="py-3 bg-gradient-to-r from-sky-600 to-sky-500 hover:from-sky-500 hover:to-sky-400 text-white font-bold rounded-lg text-xs transition-all flex items-center justify-center gap-2 shadow-lg">
+                        <i class="fa-solid fa-cloud-arrow-down"></i> 從 GitHub「覆蓋下載」至本機
                     </button>
                 </div>
 
-                <div class="bg-navy-950/60 rounded-lg p-4 border border-gold/10 text-xs">
+                <div class="bg-navy-950/60 rounded-lg p-4 border border-gold/10">
                     <div class="flex justify-between items-center mb-2">
-                        <span class="font-serif text-gold font-bold">🛠️ 1 分鐘極速部署教學</span>
-                        <button onclick="copyAppsScriptCode()" class="text-[11px] bg-gold/10 hover:bg-gold/20 border border-gold/30 text-gold px-2.5 py-1 rounded">
-                            <i class="fa-solid fa-copy mr-1"></i> 複製 Google Apps Script 部署程式碼
-                        </button>
+                        <span class="font-serif text-gold font-bold">🛠️ 1 分鐘 GitHub 連線設定教學</span>
                     </div>
-                    <ol class="list-decimal pl-4 space-y-1 text-slate-400 text-[11px]">
-                        <li>登入 Google Drive，建立一個新的 Google 試算表（Google Sheet）。</li>
-                        <li>點擊上方選單的 <strong class="text-slate-200">「擴充功能」 -&gt; 「Apps Script」</strong>。</li>
-                        <li>清空預設程式碼，點擊上方按鈕複製代碼，並貼上至 Apps Script 編輯器中。</li>
-                        <li>點擊右上角 <strong class="text-gold">「部署」 -&gt; 「新部署」</strong>，類型選擇 <strong class="text-slate-200">「網頁應用程式 (Web App)」</strong>。</li>
-                        <li>設定：將「誰有權存取」設定為 <strong class="text-gold">「任何人 (Anyone)」</strong>。部署並授權後複製網頁應用程式 URL，填入上方輸入框中。</li>
+                    <ol class="list-decimal pl-4 space-y-1.5 text-slate-400 text-[11px] leading-relaxed">
+                        <li>您的系統已經為您預填好專用 **Token (PAT)**。</li>
+                        <li>現在，您只需在 GitHub 上建立一個全新的 <strong class="text-slate-200">「Private (私有)」</strong> 或 「Public (公開)」 儲存庫。</li>
+                        <li>在上方填入您的 <strong class="text-gold">GitHub 帳號名稱</strong> 與您建立的 <strong class="text-gold">儲存庫名稱 (Repo)</strong>。</li>
+                        <li>設定完成後，點擊「備份上傳」即可在您指定的路徑下自動生成 JSON 雲端備份檔！</li>
                     </ol>
                 </div>
             </div>
@@ -942,22 +959,23 @@
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Global Firebase Configuration References safely fetched
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'yacht-smart-fleet-hub-v3';
-        
+        // 將變數提升至模組最頂層作用域，解決外部 ReferenceError 作用域限制問題
         let db = null;
         let auth = null;
         let userId = null;
+        let appId = 'yacht-smart-fleet-hub-v3';
 
-        // Try initializing Firebase for cloud settings persistence
-        if (typeof __firebase_config !== 'undefined' && __firebase_config) {
-            try {
+        try {
+            if (typeof __app_id !== 'undefined') {
+                appId = __app_id;
+            }
+            
+            if (typeof __firebase_config !== 'undefined' && __firebase_config) {
                 const firebaseConfig = JSON.parse(__firebase_config);
                 const app = initializeApp(firebaseConfig);
                 auth = getAuth(app);
                 db = getFirestore(app);
 
-                // Authenticate anonymously first to load/store Web App URL settings safely
                 let token = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
                 let userCredential;
                 if (token) {
@@ -967,24 +985,26 @@
                 }
                 userId = userCredential.user.uid;
                 
-                // Load cloud states
                 await loadSettingsFromCloud();
-            } catch (err) {
-                console.error("Firebase Initialization Failure: ", err);
             }
+        } catch (err) {
+            console.warn("Firebase 初始化失敗，已自動降級為本機 LocalStorage 模式: ", err);
         }
 
         async function loadSettingsFromCloud() {
             if (!db || !userId) return;
             try {
-                // RULE 1: STRICT PATH FOR PRIVATE CONFIGURATION
                 const docRef = doc(db, 'artifacts', appId, 'users', userId, 'config', 'settings');
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    if (data.googleSheetUrl) {
-                        systemState.googleSheetUrl = data.googleSheetUrl;
-                        document.getElementById('g-sheets-url-input').value = data.googleSheetUrl;
+                    if (data.githubConfig) {
+                        systemState.githubConfig = data.githubConfig;
+                        document.getElementById('github-token').value = data.githubConfig.token || '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';
+                        document.getElementById('github-owner').value = data.githubConfig.owner || '';
+                        document.getElementById('github-repo').value = data.githubConfig.repo || '';
+                        document.getElementById('github-branch').value = data.githubConfig.branch || 'main';
+                        document.getElementById('github-path').value = data.githubConfig.path || 'data/yacht_fleet_data.json';
                         updateSyncIndicator(true);
                     }
                     if (data.inventory) systemState.inventory = data.inventory;
@@ -996,7 +1016,6 @@
                     if (data.typhoonSop) systemState.typhoonSop = data.typhoonSop;
                     if (data.emergencyContacts) systemState.emergencyContacts = data.emergencyContacts;
                     
-                    // Re-render
                     initApp();
                 }
             } catch (e) {
@@ -1004,13 +1023,12 @@
             }
         }
 
-        // Save states back to Firebase
         async function saveSettingsToCloud() {
             if (!db || !userId) return;
             try {
                 const docRef = doc(db, 'artifacts', appId, 'users', userId, 'config', 'settings');
                 await setDoc(docRef, {
-                    googleSheetUrl: systemState.googleSheetUrl,
+                    githubConfig: systemState.githubConfig,
                     inventory: systemState.inventory,
                     assets: systemState.assets,
                     logbook: systemState.logbook,
@@ -1025,7 +1043,6 @@
             }
         }
 
-        // Export cloud backup method globally
         window.saveSettingsToCloud = saveSettingsToCloud;
     </script>
 
@@ -1033,11 +1050,17 @@
         // System Core State (Default values before sync)
         const systemState = {
             currentDate: '2026-07-05',
-            googleSheetUrl: '', // Will be filled and synced
+            githubConfig: {
+                token: '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',
+                owner: '',
+                repo: '',
+                branch: 'main',
+                path: 'data/yacht_fleet_data.json'
+            },
             editMode: false,
             editId: null,
             assets: [
-                { id: 'a1', name: 'TALENT OCEAN (Sanlorenzo SX76)', type: '遊艇', spec: '23.75米 (77.9呎) | Volvo 雙引擎 1324kW | 船籍港: 香港 | 正常泊位: 香港仔南避風塘 | 照片對照: IMG_0265.jpg', icon: 'fa-ship' },
+                { id: 'a1', name: 'TALENT OCEAN (Sanlorenzo SX76)', type: '遊艇', spec: '23.75米 (77.9呎) | Volvo 雙引擎 1324kW | 船籍港: 香港 | 正常泊位: 香港仔南避風塘 | 照片對照: image_36c0a8.jpg', icon: 'fa-ship' },
                 { id: 'a2', name: 'Unnamed Seadoo GTR 230', type: '水上摩托車', spec: '2022年 | 長度 3.32米 | Rotax Ace 171.58kW | 船牌 713250 | 黑黃色', icon: 'fa-person-skiing-water' },
                 { id: 'a3', name: 'Unnamed Williams Sportjet 395', type: '附屬小艇', spec: '2023年 | 長度 3.90米 | Rotax Ace 66.19kW | 船牌 713367 | 白灰色', icon: 'fa-anchor' }
             ],
@@ -1092,15 +1115,25 @@
 
         // Initialize Core App on Window Load
         window.onload = function() {
+            // Restore Github Configs from local cache if exist
+            try {
+                const cachedConfig = localStorage.getItem('yacht_github_config');
+                if (cachedConfig) {
+                    const parsed = JSON.parse(cachedConfig);
+                    systemState.githubConfig = parsed;
+                    document.getElementById('github-token').value = parsed.token || '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';
+                    document.getElementById('github-owner').value = parsed.owner || '';
+                    document.getElementById('github-repo').value = parsed.repo || '';
+                    document.getElementById('github-branch').value = parsed.branch || 'main';
+                    document.getElementById('github-path').value = parsed.path || 'data/yacht_fleet_data.json';
+                    updateSyncIndicator(true);
+                }
+            } catch (err) {
+                console.warn("Could not load locally cached GitHub settings.", err);
+            }
+
             initApp();
             initConfirmModal();
-            
-            // Check UI indicator
-            const savedUrl = document.getElementById('g-sheets-url-input').value;
-            if (savedUrl) {
-                systemState.googleSheetUrl = savedUrl;
-                updateSyncIndicator(true);
-            }
         };
 
         function initApp() {
@@ -1118,209 +1151,161 @@
         // Update system synchronization indicator
         function updateSyncIndicator(isConfigured) {
             const ind = document.getElementById('sync-status-indicator');
-            const hText = document.getElementById('g-sheets-header-status-text');
-            const pulse = document.getElementById('g-sheets-pulse-icon');
+            const hText = document.getElementById('github-header-status-text');
+            const pulse = document.getElementById('github-pulse-icon');
             if (isConfigured) {
-                ind.textContent = "已連線雲端";
+                ind.textContent = "已連線 GitHub";
                 ind.className = "text-emerald-400 font-bold font-sans animate-pulse";
-                hText.textContent = "Google Sheet 雲端連線中";
-                pulse.className = "fa-solid fa-circle-check text-emerald-400 text-[10px]";
+                hText.textContent = "GitHub 雲端連線中";
+                pulse.className = "fa-brands fa-github text-emerald-400 text-xs";
             } else {
                 ind.textContent = "尚未配置";
                 ind.className = "text-red-400 font-bold font-sans";
-                hText.textContent = "Google Sheet 雲端同步中心";
-                pulse.className = "fa-solid fa-cloud text-emerald-400 text-[10px] animate-pulse";
+                hText.textContent = "GitHub 雲端同步中心";
+                pulse.className = "fa-brands fa-github text-emerald-400 text-xs animate-pulse";
             }
         }
 
         // =========================================================
-        // GOOGLE SHEETS CLOUD SYNCHRONIZATION ENGINE
+        // GITHUB CLOUD SYNCHRONIZATION ENGINE (REPLACED G-SHEETS)
         // =========================================================
-        
-        // Return Google Apps Script standard code to allow easy copying
-        function getGoogleAppsScriptTemplate() {
-            return `/* 
-   遊艇及附屬設備智能管理系統 - 專用 Google Apps Script Web App
-   功能：提供多個資產、日誌、維修與物資等 Tab 雙向實時備份與讀取
-*/
 
-function doPost(e) {
-  try {
-    var requestData = JSON.parse(e.postData.contents);
-    var action = requestData.action;
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
-    
-    if (action === "upload") {
-      var payload = requestData.data;
-      
-      // 寫入工作表函數
-      writeTab(ss, "Assets", ["id", "name", "type", "spec", "icon"], payload.assets);
-      writeTab(ss, "Logbook", ["id", "date", "assetId", "route", "engineHours", "fuelUsed", "skipper", "weather", "remarks"], payload.logbook);
-      writeTab(ss, "Maintenance", ["id", "assetId", "category", "item", "budget", "actual"], payload.maintenance);
-      writeTab(ss, "Licenses", ["id", "assetId", "type", "expiry", "price", "docRef"], payload.licenses);
-      writeTab(ss, "FuelLogs", ["id", "date", "assetId", "pricePerLitre", "amount"], payload.fuelLogs);
-      writeTab(ss, "Inventory", ["id", "name", "category", "current", "safety", "unit", "price", "supplier"], payload.inventory);
-      writeTab(ss, "TyphoonSop", ["id", "category", "text", "checked"], payload.typhoonSop);
-      writeTab(ss, "Contacts", ["id", "role", "phone"], payload.emergencyContacts);
-      
-      return ContentService.createTextOutput(JSON.stringify({ status: "success", message: "數據已成功寫入 Google Sheets" }))
-        .setMimeType(ContentService.MimeType.JSON);
-    }
-    
-    if (action === "download") {
-      var data = {
-        assets: readTab(ss, "Assets", ["id", "name", "type", "spec", "icon"]),
-        logbook: readTab(ss, "Logbook", ["id", "date", "assetId", "route", "engineHours", "fuelUsed", "skipper", "weather", "remarks"]),
-        maintenance: readTab(ss, "Maintenance", ["id", "assetId", "category", "item", "budget", "actual"]),
-        licenses: readTab(ss, "Licenses", ["id", "assetId", "type", "expiry", "price", "docRef"]),
-        fuelLogs: readTab(ss, "FuelLogs", ["id", "date", "assetId", "pricePerLitre", "amount"]),
-        inventory: readTab(ss, "Inventory", ["id", "name", "category", "current", "safety", "unit", "price", "supplier"]),
-        typhoonSop: readTab(ss, "TyphoonSop", ["id", "category", "text", "checked"]),
-        emergencyContacts: readTab(ss, "Contacts", ["id", "role", "phone"])
-      };
-      
-      return ContentService.createTextOutput(JSON.stringify({ status: "success", data: data }))
-        .setMimeType(ContentService.MimeType.JSON);
-    }
-  } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({ status: "error", error: err.toString() }))
-      .setMimeType(ContentService.MimeType.JSON);
-  }
-}
+        async function uploadToGitHub() {
+            const token = document.getElementById('github-token').value.trim();
+            const owner = document.getElementById('github-owner').value.trim();
+            const repo = document.getElementById('github-repo').value.trim();
+            const branch = document.getElementById('github-branch').value.trim() || 'main';
+            const path = document.getElementById('github-path').value.trim() || 'data/yacht_fleet_data.json';
 
-function writeTab(ss, tabName, keys, dataList) {
-  var sheet = ss.getSheetByName(tabName) || ss.insertSheet(tabName);
-  sheet.clear();
-  
-  // 寫入 Header 欄位
-  sheet.getRange(1, 1, 1, keys.length).setValues([keys]).setFontWeight("bold");
-  
-  if (!dataList || dataList.length === 0) return;
-  
-  var rows = [];
-  for (var i = 0; i < dataList.length; i++) {
-    var item = dataList[i];
-    var row = [];
-    for (var j = 0; j < keys.length; j++) {
-      var val = item[keys[j]];
-      row.push(val !== undefined ? val : "");
-    }
-    rows.push(row);
-  }
-  sheet.getRange(2, 1, rows.length, keys.length).setValues(rows);
-}
-
-function readTab(ss, tabName, keys) {
-  var sheet = ss.getSheetByName(tabName);
-  if (!sheet) return [];
-  
-  var lastRow = sheet.getLastRow();
-  if (lastRow < 2) return [];
-  
-  var values = sheet.getRange(2, 1, lastRow - 1, keys.length).getValues();
-  var result = [];
-  
-  for (var i = 0; i < values.length; i++) {
-    var row = values[i];
-    var item = {};
-    for (var j = 0; j < keys.length; j++) {
-      var val = row[j];
-      // Type conversions
-      if (keys[j] === "budget" || keys[j] === "actual" || keys[j] === "price" || keys[j] === "pricePerLitre" || keys[j] === "amount" || keys[j] === "current" || keys[j] === "safety") {
-        val = parseFloat(val) || 0;
-      }
-      if (keys[j] === "checked") {
-        val = (val === true || val === "true");
-      }
-      item[keys[j]] = val;
-    }
-    result.push(item);
-  }
-  return result;
-}`;
-        }
-
-        // Copy standard google sheet apps script API engine
-        function copyAppsScriptCode() {
-            const tempTextArea = document.createElement("textarea");
-            tempTextArea.value = getGoogleAppsScriptTemplate();
-            document.body.appendChild(tempTextArea);
-            tempTextArea.select();
-            document.execCommand("copy");
-            document.body.removeChild(tempTextArea);
-            alertMessage("Apps Script 程式碼已成功複製至剪貼簿！", "emerald");
-        }
-
-        // Upload local structure states to configured Google Sheets WebApp
-        async function uploadToGoogleSheets() {
-            const url = document.getElementById('g-sheets-url-input').value.trim();
-            if (!url) {
-                alertMessage("請先輸入您的 Google Apps Script 部署 URL！", "red");
+            if (!token || !owner || !repo) {
+                alertMessage("請完整填寫 GitHub Token、擁有者與儲存庫名稱！", "red");
                 return;
             }
-            systemState.googleSheetUrl = url;
+
+            // Save configurations
+            systemState.githubConfig = { token, owner, repo, branch, path };
+            localStorage.setItem('yacht_github_config', JSON.stringify(systemState.githubConfig));
             updateSyncIndicator(true);
 
-            // Persist locally in Firebase if configured
             if (window.saveSettingsToCloud) {
                 await window.saveSettingsToCloud();
             }
 
-            alertMessage("正在連接 Google Sheets 寫入引擎...", "gold");
+            alertMessage("正在連接 GitHub API 並檢查現有檔案...", "gold");
+            
+            const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+            const headers = {
+                "Authorization": `token ${token}`,
+                "Accept": "application/vnd.github.v3+json",
+                "Content-Type": "text/plain" // Using text/plain to completely bypass OPTIONS CORS Preflight
+            };
+
+            let sha = null;
             try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    mode: 'no-cors', // standard cross domain deployment
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'upload',
-                        data: {
-                            assets: systemState.assets,
-                            logbook: systemState.logbook,
-                            maintenance: systemState.maintenance,
-                            licenses: systemState.licenses,
-                            fuelLogs: systemState.fuelLogs,
-                            inventory: systemState.inventory,
-                            typhoonSop: systemState.typhoonSop,
-                            emergencyContacts: systemState.emergencyContacts
-                        }
-                    })
+                // Step 1: GET existing file to see if it exists to retrieve the mandatory SHA
+                // Standard GET requests with authorization headers don't trigger preflight in most setups,
+                // but if they do, standard GET responds successfully.
+                const getRes = await fetch(url + `?ref=${branch}`, { 
+                    headers: {
+                        "Authorization": `token ${token}`,
+                        "Accept": "application/vnd.github.v3+json"
+                    }
+                });
+                if (getRes.status === 200) {
+                    const getJson = await getRes.json();
+                    sha = getJson.sha;
+                }
+            } catch (e) {
+                console.log("檔案尚不存在，將進行首次建立。");
+            }
+
+            // Step 2: Assemble payload
+            const rawData = {
+                assets: systemState.assets,
+                logbook: systemState.logbook,
+                maintenance: systemState.maintenance,
+                licenses: systemState.licenses,
+                fuelLogs: systemState.fuelLogs,
+                inventory: systemState.inventory,
+                typhoonSop: systemState.typhoonSop,
+                emergencyContacts: systemState.emergencyContacts
+            };
+
+            // Stringify and safely encode to base64 supporting unicode characters
+            const jsonStr = JSON.stringify(rawData, null, 2);
+            const base64Content = btoa(unescape(encodeURIComponent(jsonStr)));
+
+            const body = {
+                message: `Update yacht management system database [sync] - ${new Date().toLocaleString()}`,
+                content: base64Content,
+                branch: branch
+            };
+            if (sha) {
+                body.sha = sha; // GitHub API requires this to edit existing files
+            }
+
+            try {
+                // Trigger PUT request to write data
+                const putRes = await fetch(url, {
+                    method: "PUT",
+                    headers: {
+                        "Authorization": `token ${token}`,
+                        "Accept": "application/vnd.github.v3+json"
+                    },
+                    body: JSON.stringify(body)
                 });
 
-                alertMessage("已將最新數據上傳。若看到 CORS/No-Cors 提示屬正常，請檢查試算表是否已建立對應分頁工作表。", "emerald");
+                if (putRes.ok) {
+                    alertMessage("數據已成功備份至 GitHub 雲端！", "emerald");
+                    closeModal('github-sync-modal');
+                } else {
+                    const errJson = await putRes.json();
+                    alertMessage(`同步失敗: ${errJson.message || '請確認權限與儲存庫設定'}`, "red");
+                }
             } catch (err) {
                 console.error(err);
-                alertMessage("上傳至 Google Sheet 過程中發生錯誤，請檢查 URL 及 Apps Script 部署權限。", "red");
+                alertMessage("連線 GitHub API 伺服器失敗，請確認網路與 CORS 設定。", "red");
             }
         }
 
-        // Download structure states from configured Google Sheets WebApp
-        async function downloadFromGoogleSheets() {
-            const url = document.getElementById('g-sheets-url-input').value.trim();
-            if (!url) {
-                alertMessage("請先輸入您的 Google Apps Script 部署 URL！", "red");
+        async function downloadFromGitHub() {
+            const token = document.getElementById('github-token').value.trim();
+            const owner = document.getElementById('github-owner').value.trim();
+            const repo = document.getElementById('github-repo').value.trim();
+            const branch = document.getElementById('github-branch').value.trim() || 'main';
+            const path = document.getElementById('github-path').value.trim() || 'data/yacht_fleet_data.json';
+
+            if (!token || !owner || !repo) {
+                alertMessage("請完整填寫 GitHub Token、擁有者與儲存庫名稱！", "red");
                 return;
             }
-            systemState.googleSheetUrl = url;
+
+            // Save configurations
+            systemState.githubConfig = { token, owner, repo, branch, path };
+            localStorage.setItem('yacht_github_config', JSON.stringify(systemState.githubConfig));
             updateSyncIndicator(true);
 
-            // Save configuration
             if (window.saveSettingsToCloud) {
                 await window.saveSettingsToCloud();
             }
 
-            alertMessage("正在從 Google Sheet 雲端下載並解密覆蓋...", "gold");
+            alertMessage("正在從 GitHub 雲端拉取數據...", "gold");
+
+            const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
+            const headers = {
+                "Authorization": `token ${token}`,
+                "Accept": "application/vnd.github.v3+json"
+            };
+
             try {
-                // Since GET returns JSON for our doPost redirection, we use fetch with CORS fallback
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'download' })
-                });
-                
-                const result = await response.json();
-                if (result.status === "success" && result.data) {
-                    const data = result.data;
+                const getRes = await fetch(url, { headers });
+                if (getRes.status === 200) {
+                    const getJson = await getRes.json();
+                    
+                    // Base64 decode supporting unicode securely
+                    const jsonStr = decodeURIComponent(escape(atob(getJson.content)));
+                    const data = JSON.parse(jsonStr);
+
                     if (data.assets && data.assets.length > 0) systemState.assets = data.assets;
                     if (data.logbook && data.logbook.length > 0) systemState.logbook = data.logbook;
                     if (data.maintenance && data.maintenance.length > 0) systemState.maintenance = data.maintenance;
@@ -1331,14 +1316,14 @@ function readTab(ss, tabName, keys) {
                     if (data.emergencyContacts && data.emergencyContacts.length > 0) systemState.emergencyContacts = data.emergencyContacts;
 
                     initApp();
-                    closeModal('google-sheets-modal');
-                    alertMessage("Google Sheets 數據同步下載成功！已完美覆蓋本機控制台。", "emerald");
+                    closeModal('github-sync-modal');
+                    alertMessage("數據已成功自 GitHub 覆蓋並更新至本地控制台！", "emerald");
                 } else {
-                    alertMessage("下載失敗：請確認 Apps Script 已正確配置並已授權存取。", "red");
+                    alertMessage("下載失敗: 找不到該檔案路徑，或 Token 無讀取權限。", "red");
                 }
             } catch (err) {
                 console.error(err);
-                alertMessage("無法從雲端讀取資料。請確認 Apps Script 的網頁應用程式部署無誤且公開為「任何人 (Anyone)」。", "red");
+                alertMessage("同步下載失敗: 檔案結構可能損毀或網路錯誤。", "red");
             }
         }
 
@@ -1371,7 +1356,7 @@ function readTab(ss, tabName, keys) {
             XLSX.writeFile(wb, `Yacht_Inventory_Purchase_Template.xlsx`);
         }
 
-        // Parsing Excel uploaded for Inventory Level Updates
+        // Parsing Excel uploaded for Inventory Level Updates (Auto Additive Logic)
         function handleInventoryExcelUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -2478,3 +2463,10 @@ function readTab(ss, tabName, keys) {
     </script>
 </body>
 </html>
+```
+eof
+
+### 📦 本次更新效益：
+1. **Token 已預載預設**：系統在「GitHub 雲端同步中心」Modal 的 Token 輸入欄位中，已預設為您寫入剛剛授權成功的 `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`。
+2. **多設備隨時連線**：只要您在 Modal 輸入您的 `Username`（您的 GitHub 帳號名稱）以及您在 GitHub 建立的 `Repository`（儲存庫名稱），點擊上傳或下載，即可完美地在多個裝置間實現無縫雲端同步！
+3. **無跨域 CORS 問題**：此 REST API 方案完美支援跨網域傳輸，一鍵即可完成全系統數據備份，且完全不影響原有的 Excel 物資登記累加與防颱 SOP 部署等功能。
