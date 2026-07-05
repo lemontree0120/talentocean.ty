@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>遊艇及附屬設備智能管理系統 - 專業級雲端同步控制台</title>
+    <title>遊艇及附屬設備智能管理系統 - 頂級雲端雙向同步控制台</title>
     <!-- Tailwind CSS Play CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -35,7 +35,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2 family=Cinzel:wght@500;700&family=Inter:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Chart.js for Trend Analysis -->
@@ -49,7 +49,7 @@
                         radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.04) 0%, transparent 45%),
                         #030712;
         }
-        /* 自訂滾動條 */
+        /* 自訂高級滾動條 */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -66,12 +66,12 @@
         }
     </style>
 </head>
-<body class="premium-bg text-slate-200 font-sans min-h-screen overflow-x-hidden">
+<body class="premium-bg text-slate-200 font-sans min-h-screen overflow-x-hidden select-none">
 
     <div class="flex h-screen overflow-hidden">
         
-        <!-- SIDEBAR NAVIGATION (固定寬度控制台) -->
-        <aside class="w-64 bg-navy-950/80 border-r border-gold/15 flex flex-col justify-between backdrop-blur-md shrink-0">
+        <!-- SIDEBAR NAVIGATION (固定寬度左側導覽) -->
+        <aside class="w-64 bg-navy-950/90 border-r border-gold/15 flex flex-col justify-between backdrop-blur-md shrink-0">
             <div>
                 <!-- System Header Logo -->
                 <div class="p-6 border-b border-gold/10 flex items-center space-x-3">
@@ -125,11 +125,14 @@
                     <span>系統基準日期:</span>
                     <span class="text-gold font-mono" id="current-system-date">2026-07-05</span>
                 </div>
-                <div>Fleet Control Platform v2.5</div>
+                <div class="flex items-center justify-between">
+                    <span>同步狀態:</span>
+                    <span id="sync-status-indicator" class="text-red-400 font-bold">尚未配置</span>
+                </div>
+                <div class="mt-2 text-[10px] text-slate-600">Smart Fleet Sync Panel v3.0</div>
             </div>
         </aside>
 
-        <!-- MAIN CONTENT WORKSPACE -->
         <main class="flex-1 flex flex-col overflow-hidden bg-navy-950/30 min-w-0">
             <!-- Topbar (Header info) -->
             <header class="h-16 border-b border-gold/10 flex items-center justify-between px-8 bg-navy-900/60 backdrop-blur-md shrink-0">
@@ -138,17 +141,20 @@
                     <span class="text-slate-500 text-xs">/</span>
                     <span class="text-slate-300 text-sm font-medium" id="current-section-title">數據綜合總覽</span>
                 </div>
+                
+                <!-- Google Sheets 同步控制快捷按鈕 -->
                 <div class="flex items-center space-x-4">
-                    <!-- Google Sheet Sync Status Button -->
-                    <button onclick="openModal('google-sheets-modal')" class="text-xs bg-navy-800 border border-gold/30 hover:border-gold hover:bg-navy-700 px-3 py-1.5 rounded-full text-slate-300 transition-all flex items-center gap-1.5">
+                    <button onclick="openModal('google-sheets-modal')" class="text-xs bg-navy-800 border border-gold/30 hover:border-gold hover:bg-navy-700 px-3.5 py-2 rounded-full text-slate-300 transition-all flex items-center gap-2">
                         <i class="fa-solid fa-cloud text-emerald-400 text-[10px] animate-pulse" id="g-sheets-pulse-icon"></i> 
-                        <span id="g-sheets-header-status-text">Google Sheet 同步未設定</span>
+                        <span id="g-sheets-header-status-text">Google Sheet 雲端同步中心</span>
                     </button>
-                    <span class="text-xs bg-navy-800 border border-gold/20 px-3 py-1.5 rounded-full text-slate-300">
-                        <i class="fa-solid fa-circle text-emerald-500 text-[8px] mr-1.5"></i> 
-                        TALENT OCEAN 狀態: 港內停泊中
+                    
+                    <span class="text-xs bg-navy-800 border border-gold/20 px-3 py-2 rounded-full text-slate-300">
+                        <i class="fa-solid fa-circle text-emerald-500 text-[8px] mr-1.5 animate-pulse"></i> 
+                        TALENT OCEAN: 港內停泊中
                     </span>
-                    <button onclick="openAddModal('add-asset-modal', '新增船隻/設備資產', '新增並保存')" class="text-xs bg-gradient-to-r from-gold/80 to-gold hover:from-gold hover:to-gold-dark text-navy-950 font-bold px-4 py-2 rounded-lg transition-all shadow-md flex items-center gap-1.5">
+                    
+                    <button onclick="openAddModal('add-asset-modal', '新增船隻/設備資產', '新增並保存')" class="text-xs bg-gradient-to-r from-gold/80 to-gold hover:from-gold hover:to-gold-dark text-navy-950 font-bold px-4 py-2.5 rounded-lg transition-all shadow-md flex items-center gap-1.5">
                         <i class="fa-solid fa-plus"></i> 新增設備資產
                     </button>
                 </div>
@@ -191,7 +197,6 @@
                         </div>
                     </div>
 
-                    <!-- Alerts & Fast Action Row -->
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <!-- Critical License Alert (Dynamic Dashboard) -->
                         <div class="bg-navy-900/60 border border-gold/10 rounded-xl p-6 shadow-lg lg:col-span-2">
@@ -274,7 +279,7 @@
                         </button>
                     </div>
 
-                    <!-- Yacht Hero Display -->
+                    <!-- Yacht Hero Display (IMG_0265.jpg Reference) -->
                     <div class="bg-navy-900/40 border border-gold/20 rounded-xl overflow-hidden p-6 grid grid-cols-1 lg:grid-cols-3 gap-8 items-center animate-fade-in">
                         <div class="lg:col-span-1">
                             <img src="IMG_0265.jpg" alt="Sanlorenzo SX76" class="w-full h-48 object-cover rounded-lg border border-gold/20 shadow-lg" onerror="this.src='https://images.presentationgo.com/2025/09/aerial-view-cruise-ship.jpg';">
@@ -338,7 +343,7 @@
                             <button onclick="downloadExcelTemplate()" class="bg-navy-800 hover:bg-navy-700 border border-gold/30 hover:border-gold text-gold text-xs font-bold px-3 py-2 rounded-lg transition-all flex items-center gap-1.5 shadow-md">
                                 <i class="fa-solid fa-file-arrow-down"></i> 下載 Excel 範本
                             </button>
-                            <label for="excel-upload-input" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-2 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shadow-md">
+                            <label for="excel-upload-input" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-2 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shadow-md font-sans">
                                 <i class="fa-solid fa-file-excel"></i> 匯入 Excel 覆蓋
                             </label>
                             <input type="file" id="excel-upload-input" accept=".xlsx, .xls" class="hidden" onchange="handleExcelUpload(event)">
@@ -376,7 +381,7 @@
                 <div id="tab-maintenance" class="space-y-6 hidden">
                     <div class="flex justify-between items-center">
                         <div>
-                            <h3 class="text-lg font-bold text-slate-200">維修保養細分項目與預算對照</h3>
+                            <h3 class="text-lg font-bold text-slate-200">維修保養與預算管理</h3>
                             <p class="text-xs text-slate-400">精細拆分每項保養細節，動態評估實際開支偏差 (Variance)</p>
                         </div>
                         <button onclick="openAddModal('add-maintenance-modal', '登記保養維修預算明細', '新增紀錄並分析')" class="bg-gold hover:bg-gold-dark text-navy-950 text-xs font-bold px-4 py-2 rounded-lg transition-all flex items-center gap-1.5">
@@ -493,22 +498,22 @@
                     </div>
                 </div>
 
-                <!-- ================= 7. INVENTORY & SHOPPING LIST ================= -->
+                <!-- ================= 7. INVENTORY & SHOPPING LIST (更名為：遊艇生活與洗船物資) ================= -->
                 <div id="tab-inventory" class="space-y-6 hidden">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                         <div>
-                            <h3 class="text-lg font-bold text-slate-200">遊艇生活與洗船物資（自動採購系統）</h3>
-                            <p class="text-xs text-slate-400">追蹤常備廁紙、飲用水、洗船及拋光上蠟用品。低於安全水位時自動生成港幣採購估算表</p>
+                            <h3 class="text-lg font-bold text-slate-200" id="inventory-tab-title">遊艇生活與洗船物資</h3>
+                            <p class="text-xs text-slate-400">追蹤常備廁紙、飲用水、洗船及拋光上蠟用品。現有庫存支持上傳已購物品 Excel 進行自動累加與盤點。</p>
                         </div>
                         <div class="flex flex-wrap items-center gap-2">
-                            <button onclick="downloadInventoryTemplate()" class="bg-navy-800 hover:bg-navy-700 border border-gold/30 hover:border-gold text-gold text-xs font-bold px-3 py-2 rounded-lg transition-all flex items-center gap-1.5 shadow-md">
+                            <button onclick="downloadInventoryTemplate()" class="bg-navy-800 hover:bg-navy-700 border border-gold/30 hover:border-gold text-gold text-xs font-bold px-3.5 py-2.5 rounded-lg transition-all flex items-center gap-1.5 shadow-md">
                                 <i class="fa-solid fa-file-arrow-down"></i> 下載採購登記範本
                             </button>
-                            <label for="inventory-excel-upload" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-2 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shadow-md">
+                            <label for="inventory-excel-upload" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3.5 py-2.5 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shadow-md font-sans">
                                 <i class="fa-solid fa-file-excel"></i> 導入已購物品 Excel
                             </label>
                             <input type="file" id="inventory-excel-upload" accept=".xlsx, .xls" class="hidden" onchange="handleInventoryExcelUpload(event)">
-                            <button onclick="openAddModal('adjust-inventory-modal', '修改常備庫存存量', '修正庫存數據')" class="bg-gold hover:bg-gold-dark text-navy-950 text-xs font-bold px-4 py-2 rounded-lg transition-all flex items-center gap-1.5 shadow-md">
+                            <button onclick="openAddModal('adjust-inventory-modal', '修改常備庫存存量', '修正庫存數據')" class="bg-gold hover:bg-gold-dark text-navy-950 text-xs font-bold px-4 py-2.5 rounded-lg transition-all flex items-center gap-1.5 shadow-md">
                                 <i class="fa-solid fa-sliders"></i> 調整現有庫存
                             </button>
                         </div>
@@ -517,7 +522,7 @@
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         <!-- Inventory Level Check -->
                         <div class="bg-navy-900/60 border border-gold/10 rounded-xl p-6 shadow-lg lg:col-span-2">
-                            <h4 class="text-sm font-bold text-slate-200 mb-4 font-serif text-gold">常備物資庫存狀況</h4>
+                            <h4 class="text-sm font-bold text-slate-200 mb-4 font-serif text-gold">物資安全庫存監控表</h4>
                             <div class="overflow-x-auto">
                                 <table class="w-full text-left border-collapse text-xs">
                                     <thead>
@@ -543,9 +548,9 @@
                             <div>
                                 <div class="flex items-center justify-between mb-4 border-b border-gold/20 pb-3">
                                     <h4 class="text-sm font-bold text-slate-100 flex items-center gap-2 font-serif">
-                                        <i class="fa-solid fa-cart-shopping text-gold"></i> 自動生成：出海補貨單
+                                        <i class="fa-solid fa-cart-shopping text-gold"></i> 自動生成：採購清單
                                     </h4>
-                                    <span class="text-[10px] bg-amber-500/10 border border-amber-500/30 text-amber-400 px-2.5 py-0.5 rounded-full font-bold">動態計算</span>
+                                    <span class="text-[10px] bg-amber-500/10 border border-amber-500/30 text-amber-400 px-2.5 py-0.5 rounded-full font-bold">動態預估</span>
                                 </div>
                                 <div class="space-y-3 mb-6 overflow-y-auto max-h-64" id="auto-shopping-list">
                                     <!-- Populated dynamically -->
@@ -624,139 +629,52 @@
     </div>
 
     <!-- ========================================================= -->
-    <!-- MODAL DIALOGS (彈出視窗與智能雲端中心) -->
+    <!-- MODAL DIALOGS (FOR INTERACTIVE SYSTEM CREATION/ADDITIONS) -->
     <!-- ========================================================= -->
 
     <!-- Google Sheets Sync Configuration Modal -->
-    <div id="google-sheets-modal" class="fixed inset-0 bg-navy-950/90 backdrop-blur-md flex items-center justify-center z-50 hidden">
-        <div class="bg-navy-900 border-2 border-gold/40 rounded-2xl w-full max-w-4xl p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
-            <button onclick="closeModal('google-sheets-modal')" class="absolute top-6 right-6 text-slate-400 hover:text-gold transition-all"><i class="fa-solid fa-xmark text-2xl"></i></button>
+    <div id="google-sheets-modal" class="fixed inset-0 bg-navy-950/85 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+        <div class="bg-navy-900 border-2 border-gold/30 rounded-xl w-full max-w-2xl p-6 shadow-2xl relative">
+            <button onclick="closeModal('google-sheets-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-100"><i class="fa-solid fa-xmark text-lg"></i></button>
             
-            <div class="flex items-center space-x-3 mb-6">
-                <i class="fa-solid fa-file-excel text-3xl text-emerald-500"></i>
+            <div class="flex items-center gap-3 mb-4">
+                <i class="fa-solid fa-cloud-arrow-up text-3xl text-gold"></i>
                 <div>
-                    <h3 class="text-xl font-bold font-serif text-gold">Google Sheets 雲端智能同步中心</h3>
-                    <p class="text-xs text-slate-400">將整套母船及小艇系統之數據（資產、日誌、保養、加油、物資、防颱 SOP）即時寫入或讀取自您的試算表</p>
+                    <h3 class="text-lg font-bold font-serif text-slate-100">Google Sheet 雲端同步控制中心</h3>
+                    <p class="text-xs text-slate-400">配置您個人 Google Apps Script 的 API 節點，實現多表單雙向高階備份與同步。</p>
                 </div>
             </div>
 
-            <!-- Sync Control Dashboard -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <!-- Status & Connection -->
-                <div class="p-5 bg-navy-950/60 border border-gold/10 rounded-xl space-y-4 md:col-span-1">
-                    <h4 class="text-sm font-bold text-slate-200 flex items-center gap-2">
-                        <i class="fa-solid fa-tower-broadcast text-gold"></i> 連接狀態與控制
-                    </h4>
-                    
-                    <div class="space-y-2">
-                        <label class="block text-xs text-slate-400">Google Sheets WebApp 網址 (URL)</label>
-                        <input type="text" id="g-sheets-url-input" placeholder="https://script.google.com/macros/s/.../exec" class="w-full bg-navy-900 border border-gold/20 rounded-lg p-2 text-xs focus:border-gold outline-none text-slate-200 font-mono">
-                    </div>
-
-                    <div class="flex items-center justify-between py-2 border-t border-slate-800">
-                        <span class="text-xs text-slate-400">自動同步變更</span>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" id="g-sheets-auto-sync" class="sr-only peer" checked>
-                            <div class="w-9 h-5 bg-navy-800 rounded-full peer peer-focus:ring-2 peer-focus:ring-gold/30 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-slate-400 after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-gold"></div>
-                        </label>
-                    </div>
-
-                    <div class="space-y-2 pt-2">
-                        <button onclick="syncToGoogleSheet()" class="w-full py-2.5 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold rounded-lg text-xs transition-all shadow flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-cloud-arrow-up"></i> 立即上傳同步 (Upload)
-                        </button>
-                        <button onclick="fetchFromGoogleSheet()" class="w-full py-2.5 bg-navy-800 hover:bg-navy-700 border border-gold/20 hover:border-gold/50 text-gold font-bold rounded-lg text-xs transition-all flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-cloud-arrow-down"></i> 自試算表載入 (Download)
-                        </button>
-                    </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">您的 Google Apps Script 部署 URL (Web App URL)</label>
+                    <input type="text" id="g-sheets-url-input" placeholder="https://script.google.com/macros/s/.../exec" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-xs font-mono text-slate-100 outline-none focus:border-gold">
+                    <p class="text-[10px] text-slate-500 mt-1">※ 當您完成填寫後，系統設定與此 API 網址將會自動且安全地保存在雲端中，防止遺失。</p>
                 </div>
 
-                <!-- Integration Instructions -->
-                <div class="p-5 bg-navy-950/60 border border-gold/10 rounded-xl space-y-3 md:col-span-2">
-                    <h4 class="text-sm font-bold text-slate-200 flex items-center gap-2">
-                        <i class="fa-solid fa-circle-info text-gold"></i> 快速三步連結您的 Google Sheet
-                    </h4>
-                    <ol class="text-xs text-slate-300 space-y-2 list-decimal pl-4 leading-relaxed">
-                        <li>新建一個空白的 <strong class="text-gold">Google 試算表</strong>。</li>
-                        <li>於試算表上方選單選取 <strong>「擴充功能」 -> 「Apps Script」</strong>。</li>
-                        <li>將下方文本框內的 <strong class="text-gold">Apps Script 程式碼</strong> 複製，覆蓋並貼入程式碼編輯器內。</li>
-                        <li>點擊右上角 <strong>「部署」 -> 「新部署」</strong>。選取類型為 <strong>「網頁應用程式」</strong>，並將「誰能存取」設為 <strong class="text-red-400">「任何人 (Anyone)」</strong>。</li>
-                        <li>複製部署完成後生成的「網頁應用程式網址」並貼入左方 URL 輸入框，即刻實現雙向即時雲端數據同步！</li>
-                    </ol>
-                </div>
-            </div>
-
-            <!-- Apps Script Template Code Area -->
-            <div class="space-y-3">
-                <div class="flex justify-between items-center">
-                    <span class="text-xs font-bold text-gold font-serif uppercase tracking-wider"><i class="fa-solid fa-code mr-1"></i> Google Apps Script 專用同步接收器程式碼</span>
-                    <button onclick="copyAppsScriptToClipboard()" class="text-xs bg-gold/10 border border-gold/30 hover:bg-gold hover:text-navy-950 text-gold px-3 py-1 rounded transition-all font-bold">
-                        <i class="fa-solid fa-copy mr-1"></i> 一鍵複製程式碼
+                <div class="grid grid-cols-2 gap-4">
+                    <button onclick="uploadToGoogleSheets()" class="py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold rounded-lg text-xs transition-all flex items-center justify-center gap-2 shadow-lg">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> 將本地數據「覆蓋上傳」至 Google 雲端
+                    </button>
+                    <button onclick="downloadFromGoogleSheets()" class="py-3 bg-gradient-to-r from-sky-600 to-sky-500 hover:from-sky-500 hover:to-sky-400 text-white font-bold rounded-lg text-xs transition-all flex items-center justify-center gap-2 shadow-lg">
+                        <i class="fa-solid fa-cloud-arrow-down"></i> 從 Google 雲端「覆蓋下載」至本機
                     </button>
                 </div>
-                <div class="bg-navy-950 p-4 rounded-xl border border-gold/10 overflow-x-auto max-h-64 font-mono text-[11px] text-emerald-400 leading-relaxed" id="apps-script-code-text">
-// 貼上此程式碼至 Google 試算表的 Apps Script 中，然後發布為「網頁應用程式 (Web App)」
-function doGet() {
-  try {
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
-    var configSheet = ss.getSheetByName("CONFIG_STATE");
-    var val = "{}";
-    if (configSheet) {
-      val = configSheet.getRange(1, 1).getValue();
-    }
-    return ContentService.createTextOutput(val)
-      .setMimeType(ContentService.MimeType.JSON)
-      .setHeader("Access-Control-Allow-Origin", "*");
-  } catch(err) {
-    return ContentService.createTextOutput(JSON.stringify({status: "error", message: err.toString()}))
-      .setMimeType(ContentService.MimeType.JSON)
-      .setHeader("Access-Control-Allow-Origin", "*");
-  }
-}
 
-function doPost(e) {
-  try {
-    var stateData = JSON.parse(e.postData.contents);
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
-    
-    // 儲存原始 JSON 狀態備份以便完美還原
-    var configSheet = ss.getSheetByName("CONFIG_STATE") || ss.insertSheet("CONFIG_STATE");
-    configSheet.clear();
-    configSheet.getRange(1, 1).setValue(JSON.stringify(stateData));
-    
-    // 分流寫入至精美人類可讀的分頁報表
-    writeToSheet(ss, "Assets_船隊與設備規格", ["資產ID", "設備名稱", "資產類別", "詳細規格"], stateData.assets, ["id", "name", "type", "spec"]);
-    writeToSheet(ss, "Logbook_航海日誌", ["日期", "載具ID", "航行路線", "引擎時數", "油耗", "船長", "海況與備註"], stateData.logbook, ["date", "assetId", "route", "engineHours", "fuelUsed", "skipper", "remarks"]);
-    writeToSheet(ss, "Maintenance_維修保養", ["資產ID", "分類", "保養項目細分", "預算(HKD)", "實際支出(HKD)"], stateData.maintenance, ["assetId", "category", "item", "budget", "actual"]);
-    writeToSheet(ss, "Licenses_保險與牌照提示", ["資產ID", "證照名稱", "年保費(HKD)", "到期日", "對照文件原檔"], stateData.licenses, ["assetId", "type", "price", "expiry", "docRef"]);
-    writeToSheet(ss, "FuelLogs_加油記錄", ["加油日期", "對應船隻ID", "單價(HKD/L)", "加油量(L)"], stateData.fuelLogs, ["date", "assetId", "pricePerLitre", "amount"]);
-    writeToSheet(ss, "Inventory_洗船物資生活備品", ["物品名稱", "分類", "現有庫存", "安全水位", "補貨渠道"], stateData.inventory, ["name", "category", "current", "safety", "supplier"]);
-    
-    return ContentService.createTextOutput(JSON.stringify({status: "success", message: "Yacht database successfully synced!"}))
-      .setMimeType(ContentService.MimeType.JSON)
-      .setHeader("Access-Control-Allow-Origin", "*");
-  } catch(err) {
-    return ContentService.createTextOutput(JSON.stringify({status: "error", message: err.toString()}))
-      .setMimeType(ContentService.MimeType.JSON)
-      .setHeader("Access-Control-Allow-Origin", "*");
-  }
-}
-
-function writeToSheet(ss, sheetName, headers, dataArray, keys) {
-  var sheet = ss.getSheetByName(sheetName) || ss.insertSheet(sheetName);
-  sheet.clear();
-  sheet.appendRow(headers);
-  if (!dataArray || dataArray.length === 0) return;
-  var rows = [];
-  dataArray.forEach(function(item) {
-    var row = [];
-    keys.forEach(function(key) {
-      row.push(item[key] || "");
-    });
-    rows.push(row);
-  });
-  sheet.getRange(2, 1, rows.length, headers.length).setValues(rows);
-}
+                <div class="bg-navy-950/60 rounded-lg p-4 border border-gold/10 text-xs">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-serif text-gold font-bold">🛠️ 1 分鐘極速部署教學</span>
+                        <button onclick="copyAppsScriptCode()" class="text-[11px] bg-gold/10 hover:bg-gold/20 border border-gold/30 text-gold px-2.5 py-1 rounded">
+                            <i class="fa-solid fa-copy mr-1"></i> 複製 Google Apps Script 部署程式碼
+                        </button>
+                    </div>
+                    <ol class="list-decimal pl-4 space-y-1 text-slate-400 text-[11px]">
+                        <li>登入 Google Drive，建立一個新的 Google 試算表（Google Sheet）。</li>
+                        <li>點擊上方選單的 <strong class="text-slate-200">「擴充功能」 -&gt; 「Apps Script」</strong>。</li>
+                        <li>清空預設程式碼，點擊上方按鈕複製代碼，並貼上至 Apps Script 編輯器中。</li>
+                        <li>點擊右上角 <strong class="text-gold">「部署」 -&gt; 「新部署」</strong>，類型選擇 <strong class="text-slate-200">「網頁應用程式 (Web App)」</strong>。</li>
+                        <li>設定：將「誰有權存取」設定為 <strong class="text-gold">「任何人 (Anyone)」</strong>。部署並授權後複製網頁應用程式 URL，填入上方輸入框中。</li>
+                    </ol>
                 </div>
             </div>
         </div>
@@ -1006,11 +924,11 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
         </div>
     </div>
 
-    <!-- Custom Confirm Modal (Strict Anti-Alert Guardrail) -->
+    <!-- Custom Confirm Modal -->
     <div id="confirm-modal" class="fixed inset-0 bg-navy-950/80 backdrop-blur-sm flex items-center justify-center z-[60] hidden">
         <div class="bg-navy-900 border border-gold/20 rounded-xl w-full max-w-xs p-6 shadow-2xl text-center">
             <i class="fa-solid fa-triangle-exclamation text-amber-500 text-3xl mb-3 animate-pulse"></i>
-            <h3 class="text-sm font-bold text-slate-100 mb-4">確認要刪除此項目嗎？數據將無法恢復。</h3>
+            <h3 class="text-sm font-bold text-slate-100 mb-4 font-sans">確認要刪除此項目嗎？數據將無法恢復。</h3>
             <div class="flex justify-center space-x-3">
                 <button id="confirm-cancel-btn" class="px-4 py-2 bg-navy-800 hover:bg-navy-700 text-slate-300 text-xs font-bold rounded-lg transition-all">取消</button>
                 <button id="confirm-ok-btn" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white text-xs font-bold rounded-lg transition-all">確認刪除</button>
@@ -1018,13 +936,104 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
         </div>
     </div>
 
+    <!-- Firebase Imports and Firestore Cloud Config Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    <!-- ========================================================= -->
-    <!-- JAVASCRIPT STATE ENGINE & CORE CALCULATION LOGIC -->
-    <!-- ========================================================= -->
+        // Global Firebase Configuration References safely fetched
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'yacht-smart-fleet-hub-v3';
+        
+        let db = null;
+        let auth = null;
+        let userId = null;
+
+        // Try initializing Firebase for cloud settings persistence
+        if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+            try {
+                const firebaseConfig = JSON.parse(__firebase_config);
+                const app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+
+                // Authenticate anonymously first to load/store Web App URL settings safely
+                let token = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+                let userCredential;
+                if (token) {
+                    userCredential = await signInWithCustomToken(auth, token);
+                } else {
+                    userCredential = await signInAnonymously(auth);
+                }
+                userId = userCredential.user.uid;
+                
+                // Load cloud states
+                await loadSettingsFromCloud();
+            } catch (err) {
+                console.error("Firebase Initialization Failure: ", err);
+            }
+        }
+
+        async function loadSettingsFromCloud() {
+            if (!db || !userId) return;
+            try {
+                // RULE 1: STRICT PATH FOR PRIVATE CONFIGURATION
+                const docRef = doc(db, 'artifacts', appId, 'users', userId, 'config', 'settings');
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if (data.googleSheetUrl) {
+                        systemState.googleSheetUrl = data.googleSheetUrl;
+                        document.getElementById('g-sheets-url-input').value = data.googleSheetUrl;
+                        updateSyncIndicator(true);
+                    }
+                    if (data.inventory) systemState.inventory = data.inventory;
+                    if (data.assets) systemState.assets = data.assets;
+                    if (data.logbook) systemState.logbook = data.logbook;
+                    if (data.maintenance) systemState.maintenance = data.maintenance;
+                    if (data.licenses) systemState.licenses = data.licenses;
+                    if (data.fuelLogs) systemState.fuelLogs = data.fuelLogs;
+                    if (data.typhoonSop) systemState.typhoonSop = data.typhoonSop;
+                    if (data.emergencyContacts) systemState.emergencyContacts = data.emergencyContacts;
+                    
+                    // Re-render
+                    initApp();
+                }
+            } catch (e) {
+                console.error("Error reading Cloud Configuration:", e);
+            }
+        }
+
+        // Save states back to Firebase
+        async function saveSettingsToCloud() {
+            if (!db || !userId) return;
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'users', userId, 'config', 'settings');
+                await setDoc(docRef, {
+                    googleSheetUrl: systemState.googleSheetUrl,
+                    inventory: systemState.inventory,
+                    assets: systemState.assets,
+                    logbook: systemState.logbook,
+                    maintenance: systemState.maintenance,
+                    licenses: systemState.licenses,
+                    fuelLogs: systemState.fuelLogs,
+                    typhoonSop: systemState.typhoonSop,
+                    emergencyContacts: systemState.emergencyContacts
+                });
+            } catch (e) {
+                console.error("Error backing up configurations to Cloud:", e);
+            }
+        }
+
+        // Export cloud backup method globally
+        window.saveSettingsToCloud = saveSettingsToCloud;
+    </script>
+
     <script>
+        // System Core State (Default values before sync)
         const systemState = {
             currentDate: '2026-07-05',
+            googleSheetUrl: '', // Will be filled and synced
             editMode: false,
             editId: null,
             assets: [
@@ -1044,7 +1053,7 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
                 { id: 'm4', assetId: 'a3', category: '推進系統', item: 'Williams 395 噴射泵葉輪與管路保養', budget: 15000, actual: 14200 }
             ],
             licenses: [
-                { id: 'l1', assetId: 'a1', type: 'YACHTOWNERS P&I 責任險 (10億美元保額限額 / 意外自付 USD 2,500)', expiry: '2027-03-27', price: 68000, docRef: 'LF Certificate - 94131 - 1239269 - TALENT OCEAN[758000] - P&I - 01 2.pdf' },
+                { id: 'l1', assetId: 'a1', type: 'YACHTOWNERS P&I 責任險 (10億美元保額限額 / 意外自付 USD 2,500)', expiry: '2027-03-27', price: 68000, docRef: 'LF Certificate - 94131 - 1239269 - TALENT OCEAN[758000] - P&I - 01 2.pdf / Policy wording 2.zip' },
                 { id: 'l2', assetId: 'a1', type: '海事處本地船隻運作牌照 (TALENT OCEAN - 144937)', expiry: '2027-05-08', price: 8500, docRef: 'TALENT OCEAN 遊艇牌照_ 08-05-2027.pdf' },
                 { id: 'l3', assetId: 'a2', type: '海事處本地船隻運作牌照 (Seadoo GTR - 713250)', expiry: '2027-05-08', price: 1200, docRef: '水上電單車牌照_ 08-05-2027.pdf' },
                 { id: 'l4', assetId: 'a3', type: '海事處本地船隻運作牌照 (Williams Sportjet - 713367)', expiry: '2027-05-10', price: 2500, docRef: '小艇牌照_10-05-2027.pdf' }
@@ -1081,114 +1090,370 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
         let fuelChartInstance = null;
         let deleteContext = null;
 
-        function copyAppsScriptToClipboard() {
-            const codeText = document.getElementById('apps-script-code-text').innerText;
-            const tempTextArea = document.createElement('textarea');
-            tempTextArea.value = codeText;
+        // Initialize Core App on Window Load
+        window.onload = function() {
+            initApp();
+            initConfirmModal();
+            
+            // Check UI indicator
+            const savedUrl = document.getElementById('g-sheets-url-input').value;
+            if (savedUrl) {
+                systemState.googleSheetUrl = savedUrl;
+                updateSyncIndicator(true);
+            }
+        };
+
+        function initApp() {
+            renderDashboard();
+            renderAssets();
+            renderLogbook();
+            renderMaintenance();
+            renderLicenses();
+            renderFuelLogsAndChart();
+            renderInventory();
+            renderTyphoonSop();
+            populateFormSelects();
+        }
+
+        // Update system synchronization indicator
+        function updateSyncIndicator(isConfigured) {
+            const ind = document.getElementById('sync-status-indicator');
+            const hText = document.getElementById('g-sheets-header-status-text');
+            const pulse = document.getElementById('g-sheets-pulse-icon');
+            if (isConfigured) {
+                ind.textContent = "已連線雲端";
+                ind.className = "text-emerald-400 font-bold font-sans animate-pulse";
+                hText.textContent = "Google Sheet 雲端連線中";
+                pulse.className = "fa-solid fa-circle-check text-emerald-400 text-[10px]";
+            } else {
+                ind.textContent = "尚未配置";
+                ind.className = "text-red-400 font-bold font-sans";
+                hText.textContent = "Google Sheet 雲端同步中心";
+                pulse.className = "fa-solid fa-cloud text-emerald-400 text-[10px] animate-pulse";
+            }
+        }
+
+        // =========================================================
+        // GOOGLE SHEETS CLOUD SYNCHRONIZATION ENGINE
+        // =========================================================
+        
+        // Return Google Apps Script standard code to allow easy copying
+        function getGoogleAppsScriptTemplate() {
+            return `/* 
+   遊艇及附屬設備智能管理系統 - 專用 Google Apps Script Web App
+   功能：提供多個資產、日誌、維修與物資等 Tab 雙向實時備份與讀取
+*/
+
+function doPost(e) {
+  try {
+    var requestData = JSON.parse(e.postData.contents);
+    var action = requestData.action;
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    
+    if (action === "upload") {
+      var payload = requestData.data;
+      
+      // 寫入工作表函數
+      writeTab(ss, "Assets", ["id", "name", "type", "spec", "icon"], payload.assets);
+      writeTab(ss, "Logbook", ["id", "date", "assetId", "route", "engineHours", "fuelUsed", "skipper", "weather", "remarks"], payload.logbook);
+      writeTab(ss, "Maintenance", ["id", "assetId", "category", "item", "budget", "actual"], payload.maintenance);
+      writeTab(ss, "Licenses", ["id", "assetId", "type", "expiry", "price", "docRef"], payload.licenses);
+      writeTab(ss, "FuelLogs", ["id", "date", "assetId", "pricePerLitre", "amount"], payload.fuelLogs);
+      writeTab(ss, "Inventory", ["id", "name", "category", "current", "safety", "unit", "price", "supplier"], payload.inventory);
+      writeTab(ss, "TyphoonSop", ["id", "category", "text", "checked"], payload.typhoonSop);
+      writeTab(ss, "Contacts", ["id", "role", "phone"], payload.emergencyContacts);
+      
+      return ContentService.createTextOutput(JSON.stringify({ status: "success", message: "數據已成功寫入 Google Sheets" }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    if (action === "download") {
+      var data = {
+        assets: readTab(ss, "Assets", ["id", "name", "type", "spec", "icon"]),
+        logbook: readTab(ss, "Logbook", ["id", "date", "assetId", "route", "engineHours", "fuelUsed", "skipper", "weather", "remarks"]),
+        maintenance: readTab(ss, "Maintenance", ["id", "assetId", "category", "item", "budget", "actual"]),
+        licenses: readTab(ss, "Licenses", ["id", "assetId", "type", "expiry", "price", "docRef"]),
+        fuelLogs: readTab(ss, "FuelLogs", ["id", "date", "assetId", "pricePerLitre", "amount"]),
+        inventory: readTab(ss, "Inventory", ["id", "name", "category", "current", "safety", "unit", "price", "supplier"]),
+        typhoonSop: readTab(ss, "TyphoonSop", ["id", "category", "text", "checked"]),
+        emergencyContacts: readTab(ss, "Contacts", ["id", "role", "phone"])
+      };
+      
+      return ContentService.createTextOutput(JSON.stringify({ status: "success", data: data }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ status: "error", error: err.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function writeTab(ss, tabName, keys, dataList) {
+  var sheet = ss.getSheetByName(tabName) || ss.insertSheet(tabName);
+  sheet.clear();
+  
+  // 寫入 Header 欄位
+  sheet.getRange(1, 1, 1, keys.length).setValues([keys]).setFontWeight("bold");
+  
+  if (!dataList || dataList.length === 0) return;
+  
+  var rows = [];
+  for (var i = 0; i < dataList.length; i++) {
+    var item = dataList[i];
+    var row = [];
+    for (var j = 0; j < keys.length; j++) {
+      var val = item[keys[j]];
+      row.push(val !== undefined ? val : "");
+    }
+    rows.push(row);
+  }
+  sheet.getRange(2, 1, rows.length, keys.length).setValues(rows);
+}
+
+function readTab(ss, tabName, keys) {
+  var sheet = ss.getSheetByName(tabName);
+  if (!sheet) return [];
+  
+  var lastRow = sheet.getLastRow();
+  if (lastRow < 2) return [];
+  
+  var values = sheet.getRange(2, 1, lastRow - 1, keys.length).getValues();
+  var result = [];
+  
+  for (var i = 0; i < values.length; i++) {
+    var row = values[i];
+    var item = {};
+    for (var j = 0; j < keys.length; j++) {
+      var val = row[j];
+      // Type conversions
+      if (keys[j] === "budget" || keys[j] === "actual" || keys[j] === "price" || keys[j] === "pricePerLitre" || keys[j] === "amount" || keys[j] === "current" || keys[j] === "safety") {
+        val = parseFloat(val) || 0;
+      }
+      if (keys[j] === "checked") {
+        val = (val === true || val === "true");
+      }
+      item[keys[j]] = val;
+    }
+    result.push(item);
+  }
+  return result;
+}`;
+        }
+
+        // Copy standard google sheet apps script API engine
+        function copyAppsScriptCode() {
+            const tempTextArea = document.createElement("textarea");
+            tempTextArea.value = getGoogleAppsScriptTemplate();
             document.body.appendChild(tempTextArea);
             tempTextArea.select();
-            try {
-                document.execCommand('copy');
-                alertMessage("Google Apps Script 複製成功！請依照說明貼入 Apps Script 編輯器內。", "emerald");
-            } catch (err) {
-                alertMessage("複製失敗，請手動複製程式碼框內的所有文字。", "red");
-            }
+            document.execCommand("copy");
             document.body.removeChild(tempTextArea);
+            alertMessage("Apps Script 程式碼已成功複製至剪貼簿！", "emerald");
         }
 
-        async function syncToGoogleSheet() {
+        // Upload local structure states to configured Google Sheets WebApp
+        async function uploadToGoogleSheets() {
             const url = document.getElementById('g-sheets-url-input').value.trim();
             if (!url) {
-                alertMessage("請先輸入您的 Google Apps Script 網頁應用程式網址！", "gold");
+                alertMessage("請先輸入您的 Google Apps Script 部署 URL！", "red");
                 return;
             }
+            systemState.googleSheetUrl = url;
+            updateSyncIndicator(true);
 
-            setSyncingHeaderStatus("同步中...");
+            // Persist locally in Firebase if configured
+            if (window.saveSettingsToCloud) {
+                await window.saveSettingsToCloud();
+            }
+
+            alertMessage("正在連接 Google Sheets 寫入引擎...", "gold");
             try {
-                // 利用 text/plain 繞過複雜的 CORS Preflight 機制
                 const response = await fetch(url, {
                     method: 'POST',
-                    mode: 'cors',
-                    body: JSON.stringify(systemState)
+                    mode: 'no-cors', // standard cross domain deployment
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'upload',
+                        data: {
+                            assets: systemState.assets,
+                            logbook: systemState.logbook,
+                            maintenance: systemState.maintenance,
+                            licenses: systemState.licenses,
+                            fuelLogs: systemState.fuelLogs,
+                            inventory: systemState.inventory,
+                            typhoonSop: systemState.typhoonSop,
+                            emergencyContacts: systemState.emergencyContacts
+                        }
+                    })
                 });
-                const result = await response.json();
-                if (result.status === "success") {
-                    alertMessage("數據已完美同步至 Google Sheet！", "emerald");
-                    setSyncingHeaderStatus("已同步至 Sheet");
-                    localStorage.setItem('yacht_g_sheets_url', url);
-                } else {
-                    throw new Error(result.message || "未知錯誤");
-                }
+
+                alertMessage("已將最新數據上傳。若看到 CORS/No-Cors 提示屬正常，請檢查試算表是否已建立對應分頁工作表。", "emerald");
             } catch (err) {
                 console.error(err);
-                alertMessage("同步失敗，請確認 Apps Script 部署權限是否設為「任何人」！", "red");
-                setSyncingHeaderStatus("同步失敗");
+                alertMessage("上傳至 Google Sheet 過程中發生錯誤，請檢查 URL 及 Apps Script 部署權限。", "red");
             }
         }
 
-        async function fetchFromGoogleSheet() {
+        // Download structure states from configured Google Sheets WebApp
+        async function downloadFromGoogleSheets() {
             const url = document.getElementById('g-sheets-url-input').value.trim();
             if (!url) {
-                alertMessage("請先輸入您的 Google Apps Script 網頁應用程式網址！", "gold");
+                alertMessage("請先輸入您的 Google Apps Script 部署 URL！", "red");
                 return;
             }
+            systemState.googleSheetUrl = url;
+            updateSyncIndicator(true);
 
-            setSyncingHeaderStatus("讀取中...");
+            // Save configuration
+            if (window.saveSettingsToCloud) {
+                await window.saveSettingsToCloud();
+            }
+
+            alertMessage("正在從 Google Sheet 雲端下載並解密覆蓋...", "gold");
             try {
-                const response = await fetch(url);
-                const cloudData = await response.json();
+                // Since GET returns JSON for our doPost redirection, we use fetch with CORS fallback
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'download' })
+                });
                 
-                if (cloudData && cloudData.assets && cloudData.logbook) {
-                    // 更新本地狀態
-                    systemState.assets = cloudData.assets;
-                    systemState.logbook = cloudData.logbook;
-                    systemState.maintenance = cloudData.maintenance;
-                    systemState.licenses = cloudData.licenses;
-                    systemState.fuelLogs = cloudData.fuelLogs;
-                    systemState.inventory = cloudData.inventory;
-                    systemState.typhoonSop = cloudData.typhoonSop;
-                    systemState.emergencyContacts = cloudData.emergencyContacts;
+                const result = await response.json();
+                if (result.status === "success" && result.data) {
+                    const data = result.data;
+                    if (data.assets && data.assets.length > 0) systemState.assets = data.assets;
+                    if (data.logbook && data.logbook.length > 0) systemState.logbook = data.logbook;
+                    if (data.maintenance && data.maintenance.length > 0) systemState.maintenance = data.maintenance;
+                    if (data.licenses && data.licenses.length > 0) systemState.licenses = data.licenses;
+                    if (data.fuelLogs && data.fuelLogs.length > 0) systemState.fuelLogs = data.fuelLogs;
+                    if (data.inventory && data.inventory.length > 0) systemState.inventory = data.inventory;
+                    if (data.typhoonSop && data.typhoonSop.length > 0) systemState.typhoonSop = data.typhoonSop;
+                    if (data.emergencyContacts && data.emergencyContacts.length > 0) systemState.emergencyContacts = data.emergencyContacts;
 
                     initApp();
-                    alertMessage("已成功從 Google Sheet 下載最新數據！", "emerald");
-                    setSyncingHeaderStatus("雲端同步中");
-                    localStorage.setItem('yacht_g_sheets_url', url);
                     closeModal('google-sheets-modal');
+                    alertMessage("Google Sheets 數據同步下載成功！已完美覆蓋本機控制台。", "emerald");
                 } else {
-                    alertMessage("讀取成功，但雲端試算表內尚無有效系統數據！建議您先執行「上傳同步」。", "gold");
-                    setSyncingHeaderStatus("未同步");
+                    alertMessage("下載失敗：請確認 Apps Script 已正確配置並已授權存取。", "red");
                 }
             } catch (err) {
                 console.error(err);
-                alertMessage("讀取雲端試算表數據失敗，請確認 WebApp 網址正確！", "red");
-                setSyncingHeaderStatus("連線失敗");
+                alertMessage("無法從雲端讀取資料。請確認 Apps Script 的網頁應用程式部署無誤且公開為「任何人 (Anyone)」。", "red");
             }
         }
 
-        function setSyncingHeaderStatus(statusText) {
-            const headerBtnText = document.getElementById('g-sheets-header-status-text');
-            const pulseIcon = document.getElementById('g-sheets-pulse-icon');
-            if (headerBtnText) {
-                headerBtnText.textContent = statusText;
-            }
-            if (pulseIcon) {
-                if (statusText.includes("中")) {
-                    pulseIcon.className = "fa-solid fa-sync fa-spin text-amber-400 text-[10px]";
-                } else if (statusText.includes("已") || statusText.includes("同步")) {
-                    pulseIcon.className = "fa-solid fa-cloud text-emerald-400 text-[10px]";
-                } else {
-                    pulseIcon.className = "fa-solid fa-cloud text-slate-400 text-[10px]";
+        // =========================================================
+        // INVENTORY EXCEL SYSTEM FOR RECORDING PURCHASED ITEMS
+        // =========================================================
+
+        // Excel file generator to record purchased items
+        function downloadInventoryTemplate() {
+            const headers = [
+                "已購物品名稱 (必須與系統相符)", 
+                "本次購入數量 (整數)", 
+                "補貨採購單價 (估算用港幣)", 
+                "安全水位調整 (留空表示不修改)"
+            ];
+            
+            const sampleRows = [
+                ["豪華船用環保易分解廁紙 (48卷/箱)", "10", "180", "10"],
+                ["屈臣氏 4.5L 桶裝純淨蒸餾水", "15", "25", "15"],
+                ["Meguiar's Premium 船用高光澤洗船清潔水", "5", "320", "4"]
+            ];
+
+            const worksheetData = [headers, ...sampleRows];
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(worksheetData);
+            
+            ws['!cols'] = [{ wch: 45 }, { wch: 22 }, { wch: 22 }, { wch: 25 }];
+
+            XLSX.utils.book_append_sheet(wb, ws, "已購物品盤點登記");
+            XLSX.writeFile(wb, `Yacht_Inventory_Purchase_Template.xlsx`);
+        }
+
+        // Parsing Excel uploaded for Inventory Level Updates
+        function handleInventoryExcelUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const sheetName = workbook.SheetNames[0];
+                    const ws = workbook.Sheets[sheetName];
+                    const rows = XLSX.utils.sheet_to_json(ws, { header: 1 });
+                    
+                    if (rows.length <= 1) {
+                        alertMessage("匯入失敗：Excel 中無有效的物資採購列！", "red");
+                        return;
+                    }
+
+                    // Map headers
+                    const headers = rows[0].map(h => String(h || '').trim());
+                    let nameIdx = 0, qtyIdx = 1, priceIdx = 2, safetyIdx = 3;
+
+                    let successCount = 0;
+                    for (let i = 1; i < rows.length; i++) {
+                        const row = rows[i];
+                        if (!row || row.length === 0 || !row[nameIdx]) continue;
+
+                        const itemName = String(row[nameIdx]).trim();
+                        const addQty = parseInt(row[qtyIdx]) || 0;
+                        const itemPrice = parseFloat(row[priceIdx]) || 0;
+                        const rawSafety = parseInt(row[safetyIdx]);
+
+                        // Search and match item by name in standard state inventory
+                        const matchedItem = systemState.inventory.find(inv => inv.name.toLowerCase() === itemName.toLowerCase() || inv.name.includes(itemName) || itemName.includes(inv.name));
+
+                        if (matchedItem) {
+                            // Increment existing inventory current stock directly (Record purchased)
+                            matchedItem.current += addQty;
+                            if (itemPrice > 0) matchedItem.price = itemPrice;
+                            if (!isNaN(rawSafety) && rawSafety >= 0) matchedItem.safety = rawSafety;
+                            successCount++;
+                        } else {
+                            // If not exist, dynamically create it to prevent data loss
+                            const newId = 'inv_' + Date.now() + '_' + i;
+                            systemState.inventory.push({
+                                id: newId,
+                                name: itemName,
+                                category: '生活消耗品 (外部 Excel)',
+                                current: addQty,
+                                safety: !isNaN(rawSafety) ? rawSafety : 5,
+                                unit: '件',
+                                price: itemPrice > 0 ? itemPrice : 100,
+                                supplier: 'Excel 批次導入渠道'
+                            });
+                            successCount++;
+                        }
+                    }
+
+                    if (successCount > 0) {
+                        initApp();
+                        alertMessage(`物資補貨 Excel 導入成功！已更新 / 建立了 ${successCount} 項常備物資盤點與庫存。`, "emerald");
+                        
+                        // Cloud Sync update if needed
+                        if (window.saveSettingsToCloud) {
+                            window.saveSettingsToCloud();
+                        }
+                    } else {
+                        alertMessage("無符合的物資數據項目可供更新。", "red");
+                    }
+
+                } catch (err) {
+                    console.error(err);
+                    alertMessage("解析 Excel 常備物資檔案出錯，請確保採用下載的範本格式。", "red");
                 }
-            }
+            };
+            reader.readAsArrayBuffer(file);
+            event.target.value = '';
         }
 
-        function autoSyncIfEnabled() {
-            const autoSyncEnabled = document.getElementById('g-sheets-auto-sync').checked;
-            const url = document.getElementById('g-sheets-url-input').value.trim();
-            if (autoSyncEnabled && url) {
-                syncToGoogleSheet();
-            }
-        }
+        // =========================================================
+        // OTHER LOGBOOK & FLEET FUNCTIONS (Yacht-specific)
+        // =========================================================
 
         function downloadExcelTemplate() {
             const headers = [
@@ -1202,19 +1467,16 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
             ];
             
             const sampleRows = [
-                ["2026-07-02", "TALENT OCEAN (SX76)", "香港仔南避風塘 -> 深水灣 -> 南丫島 -> 香港仔", "158.5 hrs", "90 L", "Captain Leo", "陣雨, 偏東風4-5級"],
-                ["2026-07-03", "Unnamed Williams Sportjet 395", "香港仔避風塘内吊移與測試", "42.1 hrs", "15 L", "Ah Ming", "多雲"],
-                ["2026-07-03", "Unnamed Seadoo GTR 230", "香港仔 -> 深水灣 -> 香港仔", "28.3 hrs", "25 L", "Captain Leo", "晴朗"]
+                ["2026-07-02", "TALENT OCEAN (SX76)", "香港仔南避風塘 -> 喜靈洲避風塘預備移防", "158.5 hrs", "90 L", "Captain Leo", "陣雨, 偏東風4-5級。因強烈熱帶風暴逼近，啟動預防性防風調度。"],
+                ["2026-07-03", "Unnamed Williams Sportjet 395", "香港仔避風塘内吊移與測試", "42.1 hrs", "15 L", "Ah Ming", "多雲。完成吊掛上岸室內存放部署。"],
+                ["2026-07-03", "Unnamed Seadoo GTR 230", "香港仔 -> 深水灣 -> 香港仔", "28.3 hrs", "25 L", "Captain Leo", "晴朗。測試高油門運轉試航，引擎冷卻正常。"]
             ];
 
             const worksheetData = [headers, ...sampleRows];
             const wb = XLSX.utils.book_new();
             const ws = XLSX.utils.aoa_to_sheet(worksheetData);
             
-            const colWidths = [
-                { wch: 22 }, { wch: 35 }, { wch: 45 }, { wch: 25 }, { wch: 20 }, { wch: 18 }, { wch: 55 }
-            ];
-            ws['!cols'] = colWidths;
+            ws['!cols'] = [{ wch: 22 }, { wch: 35 }, { wch: 45 }, { wch: 25 }, { wch: 20 }, { wch: 18 }, { wch: 55 }];
 
             XLSX.utils.book_append_sheet(wb, ws, "航海紀錄範本");
             XLSX.writeFile(wb, `Yacht_Voyage_Logbook_Template.xlsx`);
@@ -1259,7 +1521,6 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
                     if (remarksIdx === -1) remarksIdx = 6;
 
                     const newLogs = [];
-                    
                     for (let i = 1; i < rows.length; i++) {
                         const row = rows[i];
                         if (!row || row.length === 0 || !row[dateIdx]) continue;
@@ -1300,130 +1561,12 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
                         systemState.logbook.sort((a, b) => new Date(b.date) - new Date(a.date));
                         initApp();
                         alertMessage(`Excel 匯入成功！已成功覆蓋並更新 ${newLogs.length} 筆航海日誌紀錄。`, "emerald");
-                        autoSyncIfEnabled();
                     } else {
                         alertMessage("無效的資料格式，無法完成匯入！", "red");
                     }
                 } catch (err) {
                     console.error(err);
                     alertMessage("解析 Excel 檔案發生錯誤，請確保格式正確！", "red");
-                }
-            };
-            reader.readAsArrayBuffer(file);
-            event.target.value = '';
-        }
-
-        function downloadInventoryTemplate() {
-            const headers = [
-                "物品名稱 (必須與系統內現有名稱相同，或輸入新項目名稱)",
-                "已購數量 (請填寫純數字)",
-                "安全水位 (可不填，僅適用於新項目)",
-                "預估單價 (可不填，僅適用於新項目)",
-                "物資分類 (生活消耗品 / 洗船及清潔用品 / 安全物資)",
-                "補貨渠道/供應商"
-            ];
-            const sampleRows = [
-                ["豪華船用環保易分解廁紙 (48卷/箱)", 10, 10, 180, "生活消耗品", "HKTVmall 採購配送"],
-                ["屈臣氏 4.5L 桶裝純淨蒸餾水", 20, 15, 25, "生活消耗品", "屈臣氏蒸餾水直銷代理"],
-                ["Meguiar's Premium 船用高光澤洗船清潔水", 5, 4, 320, "洗船及清潔用品", "香港仔萬里船具店"]
-            ];
-
-            const worksheetData = [headers, ...sampleRows];
-            const wb = XLSX.utils.book_new();
-            const ws = XLSX.utils.aoa_to_sheet(worksheetData);
-            
-            const colWidths = [
-                { wch: 45 }, { wch: 22 }, { wch: 22 }, { wch: 22 }, { wch: 30 }, { wch: 30 }
-            ];
-            ws['!cols'] = colWidths;
-
-            XLSX.utils.book_append_sheet(wb, ws, "已購物品入庫登記");
-            XLSX.writeFile(wb, `Yacht_Supplies_Purchase_Template.xlsx`);
-        }
-
-        function handleInventoryExcelUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' });
-                    const firstSheetName = workbook.SheetNames[0];
-                    const worksheet = workbook.Sheets[firstSheetName];
-                    const rows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-                    if (rows.length <= 1) {
-                        alertMessage("匯入失敗：Excel 檔案中無有效數據！", "red");
-                        return;
-                    }
-
-                    const headers = rows[0].map(h => String(h || '').trim());
-                    let nameIdx = -1, qtyIdx = -1, safetyIdx = -1, priceIdx = -1, catIdx = -1, supplierIdx = -1;
-
-                    headers.forEach((header, index) => {
-                        if (header.includes("名稱") || header.toLowerCase().includes("name")) nameIdx = index;
-                        if (header.includes("數量") || header.includes("購入") || header.toLowerCase().includes("qty") || header.toLowerCase().includes("quantity")) qtyIdx = index;
-                        if (header.includes("水位") || header.toLowerCase().includes("safety")) safetyIdx = index;
-                        if (header.includes("單價") || header.toLowerCase().includes("price")) priceIdx = index;
-                        if (header.includes("分類") || header.toLowerCase().includes("category")) catIdx = index;
-                        if (header.includes("渠道") || header.includes("供應商") || header.toLowerCase().includes("supplier")) supplierIdx = index;
-                    });
-
-                    if (nameIdx === -1) nameIdx = 0;
-                    if (qtyIdx === -1) qtyIdx = 1;
-                    if (safetyIdx === -1) safetyIdx = 2;
-                    if (priceIdx === -1) priceIdx = 3;
-                    if (catIdx === -1) catIdx = 4;
-                    if (supplierIdx === -1) supplierIdx = 5;
-
-                    let updatedCount = 0;
-                    let addedCount = 0;
-
-                    for (let i = 1; i < rows.length; i++) {
-                        const row = rows[i];
-                        if (!row || row.length === 0 || !row[nameIdx]) continue;
-
-                        const itemName = String(row[nameIdx]).trim();
-                        const addQty = parseFloat(row[qtyIdx]) || 0;
-                        if (addQty <= 0) continue;
-
-                        const existingItem = systemState.inventory.find(inv => inv.name.toLowerCase() === itemName.toLowerCase() || inv.name.includes(itemName));
-                        
-                        if (existingItem) {
-                            existingItem.current += addQty;
-                            updatedCount++;
-                        } else {
-                            const newId = 'i_new_' + Date.now() + '_' + i;
-                            const cat = String(row[catIdx] || '生活消耗品').trim();
-                            const safetyVal = parseFloat(row[safetyIdx]) || 5;
-                            const priceVal = parseFloat(row[priceIdx]) || 100;
-                            const supplierVal = String(row[supplierIdx] || '本地船具商採購').trim();
-                            
-                            systemState.inventory.push({
-                                id: newId,
-                                name: itemName,
-                                category: cat,
-                                current: addQty,
-                                safety: safetyVal,
-                                unit: '件',
-                                price: priceVal,
-                                supplier: supplierVal
-                            });
-                            addedCount++;
-                        }
-                    }
-
-                    initApp();
-                    if (updatedCount > 0 || addedCount > 0) {
-                        alertMessage(`成功自 Excel 導入已購物品！更新了 ${updatedCount} 項物資庫存，並新增了 ${addedCount} 個新品項。`, "emerald");
-                        autoSyncIfEnabled();
-                    } else {
-                        alertMessage("Excel 解析成功，但未偵測到任何大於 0 的採購數量項目。", "gold");
-                    }
-                } catch (err) {
-                    console.error(err);
-                    alertMessage("解析已購物品 Excel 失敗，請確認資料結構與登記範本相同！", "red");
                 }
             };
             reader.readAsArrayBuffer(file);
@@ -1451,35 +1594,9 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
             }
             
             setTimeout(() => {
-                if (toast) {
-                    toast.className += ' translate-y-[-20px] opacity-0 pointer-events-none';
-                    setTimeout(() => { if(toast) toast.remove(); }, 300);
-                }
-            }, 5000);
-        }
-
-        // Document Ready Initialization
-        document.addEventListener('DOMContentLoaded', () => {
-            // 嘗試載入上次設定的 Google Sheets URL
-            const savedUrl = localStorage.getItem('yacht_g_sheets_url');
-            if (savedUrl) {
-                document.getElementById('g-sheets-url-input').value = savedUrl;
-                setSyncingHeaderStatus("已記錄 Google Sheet");
-            }
-            initApp();
-            initConfirmModal();
-        });
-
-        function initApp() {
-            renderDashboard();
-            renderAssets();
-            renderLogbook();
-            renderMaintenance();
-            renderLicenses();
-            renderFuelLogsAndChart();
-            renderInventory();
-            renderTyphoonSop();
-            populateFormSelects();
+                toast.className += ' translate-y-[-20px] opacity-0 pointer-events-none';
+                setTimeout(() => { if(toast) toast.remove(); }, 300);
+            }, 4000);
         }
 
         function initConfirmModal() {
@@ -1508,14 +1625,20 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
                     } else if (type === 'typhoon-contact') {
                         systemState.emergencyContacts = systemState.emergencyContacts.filter(c => c.id !== id);
                     }
+                    
                     initApp();
-                    autoSyncIfEnabled();
+                    
+                    // Automatically backup in background if config exists
+                    if (window.saveSettingsToCloud) {
+                        window.saveSettingsToCloud();
+                    }
                 }
                 document.getElementById('confirm-modal').classList.add('hidden');
                 deleteContext = null;
             });
         }
 
+        // Tab Switch Controller
         function switchTab(tabId) {
             const navItems = document.querySelectorAll('#sidebar-nav button');
             navItems.forEach(item => {
@@ -1540,13 +1663,13 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
 
             const badgeMap = {
                 dashboard: 'Overview / 數據綜合總覽',
-                assets: 'Assets / 船隊與設備規格',
+                assets: 'Assets / 船隊與設備基本資料',
                 logbook: 'Logbook / 航海與出航紀錄',
                 maintenance: 'Maintenance / 維修保養與預算',
-                licenses: 'Licensing / 保險與牌照提示',
-                fuel: 'Fuel Trend / 油價記錄與趨勢',
+                licenses: 'Licensing / 證照及保險提醒',
+                fuel: 'Fuel Trend / 燃料營運價格',
                 inventory: 'Inventory / 遊艇生活與洗船物資',
-                typhoon: 'Typhoon SOP / 颱風應急 SOP'
+                typhoon: 'Typhoon SOP / 應急指揮所'
             };
             const parts = badgeMap[tabId].split(' / ');
             document.getElementById('current-section-badge').textContent = parts[0];
@@ -1569,7 +1692,6 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
             return asset ? asset.name : '未知設備';
         }
 
-        // Modals management
         function openModal(modalId) {
             document.getElementById(modalId).classList.remove('hidden');
             if (modalId === 'adjust-inventory-modal' && !systemState.editMode) {
@@ -1738,12 +1860,7 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
                 const name = document.getElementById('asset-name').value;
                 const assetType = document.getElementById('asset-type').value;
                 const spec = document.getElementById('asset-spec').value;
-                
-                const iconMap = {
-                    '遊艇': 'fa-ship',
-                    '水上摩托車': 'fa-person-skiing-water',
-                    '附屬小艇': 'fa-anchor'
-                };
+                const iconMap = { '遊艇': 'fa-ship', '水上摩托車': 'fa-person-skiing-water', '附屬小艇': 'fa-anchor' };
 
                 if (systemState.editMode) {
                     const item = systemState.assets.find(a => a.id === systemState.editId);
@@ -1755,9 +1872,7 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
                     }
                 } else {
                     const id = 'asset_' + Date.now();
-                    systemState.assets.push({
-                        id, name, type: assetType, spec, icon: iconMap[assetType] || 'fa-ship'
-                    });
+                    systemState.assets.push({ id, name, type: assetType, spec, icon: iconMap[assetType] || 'fa-ship' });
                 }
                 closeModal('add-asset-modal');
             } else if (type === 'logbook') {
@@ -1773,20 +1888,13 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
                 if (systemState.editMode) {
                     const item = systemState.logbook.find(l => l.id === systemState.editId);
                     if (item) {
-                        item.assetId = assetId;
-                        item.date = date;
-                        item.route = route;
-                        item.engineHours = engineHours;
-                        item.fuelUsed = fuelUsed;
-                        item.skipper = skipper;
-                        item.weather = weather;
-                        item.remarks = remarks;
+                        item.assetId = assetId; item.date = date; item.route = route;
+                        item.engineHours = engineHours; item.fuelUsed = fuelUsed;
+                        item.skipper = skipper; item.weather = weather; item.remarks = remarks;
                     }
                 } else {
                     const id = 'log_' + Date.now();
-                    systemState.logbook.push({
-                        id, date, assetId, route, engineHours, fuelUsed, skipper, weather, remarks
-                    });
+                    systemState.logbook.push({ id, date, assetId, route, engineHours, fuelUsed, skipper, weather, remarks });
                 }
                 systemState.logbook.sort((a, b) => new Date(b.date) - new Date(a.date));
                 closeModal('add-logbook-modal');
@@ -1800,11 +1908,8 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
                 if (systemState.editMode) {
                     const item = systemState.maintenance.find(m => m.id === systemState.editId);
                     if (item) {
-                        item.assetId = assetId;
-                        item.category = category;
-                        item.item = itemVal;
-                        item.budget = budget;
-                        item.actual = actual;
+                        item.assetId = assetId; item.category = category; item.item = itemVal;
+                        item.budget = budget; item.actual = actual;
                     }
                 } else {
                     const id = 'maint_' + Date.now();
@@ -1820,10 +1925,8 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
                 if (systemState.editMode) {
                     const item = systemState.licenses.find(l => l.id === systemState.editId);
                     if (item) {
-                        item.assetId = assetId;
-                        item.type = typeName;
-                        item.price = price;
-                        item.expiry = expiry;
+                        item.assetId = assetId; item.type = typeName;
+                        item.price = price; item.expiry = expiry;
                     }
                 } else {
                     const id = 'lic_' + Date.now();
@@ -1839,10 +1942,8 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
                 if (systemState.editMode) {
                     const item = systemState.fuelLogs.find(f => f.id === systemState.editId);
                     if (item) {
-                        item.assetId = assetId;
-                        item.date = date;
-                        item.pricePerLitre = pricePerLitre;
-                        item.amount = amount;
+                        item.assetId = assetId; item.date = date;
+                        item.pricePerLitre = pricePerLitre; item.amount = amount;
                     }
                 } else {
                     const id = 'fuel_' + Date.now();
@@ -1867,10 +1968,7 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
 
                 if (systemState.editMode) {
                     const item = systemState.typhoonSop.find(s => s.id === systemState.editId);
-                    if (item) {
-                        item.category = category;
-                        item.text = text;
-                    }
+                    if (item) { item.category = category; item.text = text; }
                 } else {
                     const id = 'ts_' + Date.now();
                     systemState.typhoonSop.push({ id, category, text, checked: false });
@@ -1882,10 +1980,7 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
 
                 if (systemState.editMode) {
                     const item = systemState.emergencyContacts.find(c => c.id === systemState.editId);
-                    if (item) {
-                        item.role = role;
-                        item.phone = phone;
-                    }
+                    if (item) { item.role = role; item.phone = phone; }
                 } else {
                     const id = 'ec_' + Date.now();
                     systemState.emergencyContacts.push({ id, role, phone });
@@ -1896,7 +1991,11 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
             systemState.editMode = false;
             systemState.editId = null;
             initApp();
-            autoSyncIfEnabled();
+
+            // Save to Firebase Cloud
+            if (window.saveSettingsToCloud) {
+                window.saveSettingsToCloud();
+            }
         }
 
         function deleteItem(type, id) {
@@ -1909,13 +2008,16 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
             if (step) {
                 step.checked = !step.checked;
                 renderTyphoonSop();
-                autoSyncIfEnabled();
+                if (window.saveSettingsToCloud) {
+                    window.saveSettingsToCloud();
+                }
             }
         }
 
         // =========================================================
-        // RENDER ENGINES (DASHBOARD & TAB CONTENTS)
+        // DATA RENDERING ENGINES
         // =========================================================
+
         function renderDashboard() {
             let criticalLicensesCount = 0;
             let licenseAlertsHtml = '';
@@ -1944,7 +2046,7 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
                                 <div>
                                     <p class="text-xs text-slate-400">${getAssetName(l.assetId)}</p>
                                     <p class="text-sm font-semibold text-slate-100">${l.type}</p>
-                                    <p class="text-[10px] text-slate-500">關聯原檔: ${l.docRef}</p>
+                                    <p class="text-[10px] text-slate-500 font-mono">關聯原檔: ${l.docRef}</p>
                                 </div>
                             </div>
                             <div class="flex items-center space-x-4 mt-3 md:mt-0">
@@ -2000,7 +2102,6 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
 
             let checklistHtml = '';
             let lowStockItems = systemState.inventory.filter(i => i.current < i.safety);
-            
             if (lowStockItems.length > 0) {
                 lowStockItems.forEach(item => {
                     checklistHtml += `
@@ -2031,7 +2132,9 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
                 item.current = item.safety * 2;
                 alertMessage(`已成功補貨：${item.name}！現有庫存已更新為 ${item.current} ${item.unit}。`, "emerald");
                 initApp();
-                autoSyncIfEnabled();
+                if (window.saveSettingsToCloud) {
+                    window.saveSettingsToCloud();
+                }
             }
         }
 
@@ -2055,7 +2158,7 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
                             <p class="text-xs text-slate-400 leading-relaxed mb-4">${a.spec}</p>
                         </div>
                         <div class="border-t border-gold/10 pt-4 mt-2">
-                            <span class="text-[10px] text-slate-500 block">對應牌照保險監測:</span>
+                            <span class="text-[10px] text-slate-500 block font-sans">對應牌照保險監測:</span>
                             <span class="text-xs text-slate-300 font-semibold mt-1 inline-block">證照與牌照效期已啟動智能自動連動</span>
                         </div>
                     </div>
@@ -2075,7 +2178,7 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
                         <td class="py-4 px-6 font-mono text-slate-100">${log.engineHours}</td>
                         <td class="py-4 px-6 font-mono">${log.fuelUsed}</td>
                         <td class="py-4 px-6 text-slate-400">${log.skipper}</td>
-                        <td class="py-4 px-6 max-w-xs truncate" title="${log.remarks}">${log.weather} - ${log.remarks}</td>
+                        <td class="py-4 px-6 max-w-xs truncate font-sans" title="${log.remarks}">${log.weather} - ${log.remarks}</td>
                         <td class="py-4 px-6 text-right">
                             <div class="flex justify-end space-x-2">
                                 <button onclick="openEditModal('logbook', '${log.id}')" class="text-slate-400 hover:text-gold text-xs transition-colors"><i class="fa-solid fa-pencil"></i></button>
@@ -2111,10 +2214,10 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
                     <tr class="hover:bg-navy-900/40 transition-colors">
                         <td class="py-4 px-6 font-bold text-slate-200 text-xs">${getAssetName(m.assetId).split(' (')[0]}</td>
                         <td class="py-4 px-6 text-slate-400 text-xs">${m.category}</td>
-                        <td class="py-4 px-6 text-slate-300 text-xs">${m.item}</td>
+                        <td class="py-4 px-6 text-slate-300 text-xs font-sans">${m.item}</td>
                         <td class="py-4 px-6 font-mono text-xs">HK$ ${m.budget.toLocaleString()}</td>
                         <td class="py-4 px-6 font-mono text-xs">HK$ ${m.actual.toLocaleString()}</td>
-                        <td class="py-4 px-6 text-xs">${varianceHtml}</td>
+                        <td class="py-4 px-6 text-xs font-sans">${varianceHtml}</td>
                         <td class="py-4 px-6 text-right">
                             <div class="flex justify-end space-x-2">
                                 <button onclick="openEditModal('maintenance', '${m.id}')" class="text-slate-400 hover:text-gold text-xs transition-colors"><i class="fa-solid fa-pencil"></i></button>
@@ -2134,7 +2237,7 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
             if (netVariance > 0) {
                 varianceCard.innerHTML = `
                     <div>
-                        <span class="text-xs text-red-400">當期超出淨偏差</span>
+                        <span class="text-xs text-red-400 font-sans">當期超出淨偏差</span>
                         <h4 class="text-xl font-bold font-serif text-red-400 mt-1">HK$ +${netVariance.toLocaleString()}</h4>
                     </div>
                     <i class="fa-solid fa-triangle-exclamation text-2xl text-red-500/60"></i>
@@ -2143,7 +2246,7 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
             } else {
                 varianceCard.innerHTML = `
                     <div>
-                        <span class="text-xs text-emerald-400">當期淨節省偏差</span>
+                        <span class="text-xs text-emerald-400 font-sans">當期淨節省偏差</span>
                         <h4 class="text-xl font-bold font-serif text-emerald-400 mt-1">HK$ ${netVariance.toLocaleString()}</h4>
                     </div>
                     <i class="fa-solid fa-circle-check text-2xl text-emerald-500/60"></i>
@@ -2159,11 +2262,11 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
                 let badgeHtml = '';
                 
                 if (daysLeft <= 60) {
-                    badgeHtml = `<span class="bg-red-500/10 border border-red-500/30 text-red-400 px-2.5 py-1 rounded text-xs font-bold animate-pulse"><i class="fa-solid fa-triangle-exclamation"></i> 急需更新/交規費</span>`;
+                    badgeHtml = `<span class="bg-red-500/10 border border-red-500/30 text-red-400 px-2.5 py-1 rounded text-xs font-bold animate-pulse font-sans"><i class="fa-solid fa-triangle-exclamation"></i> 急需更新/交規費</span>`;
                 } else if (daysLeft <= 120) {
-                    badgeHtml = `<span class="bg-amber-500/10 border border-amber-500/30 text-amber-400 px-2.5 py-1 rounded text-xs font-bold"><i class="fa-solid fa-clock"></i> 建議準備續期</span>`;
+                    badgeHtml = `<span class="bg-amber-500/10 border border-amber-500/30 text-amber-400 px-2.5 py-1 rounded text-xs font-bold font-sans"><i class="fa-solid fa-clock"></i> 建議準備續期</span>`;
                 } else {
-                    badgeHtml = `<span class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-2.5 py-1 rounded text-xs font-bold"><i class="fa-solid fa-circle-check"></i> 正常生效</span>`;
+                    badgeHtml = `<span class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-2.5 py-1 rounded text-xs font-bold font-sans"><i class="fa-solid fa-circle-check"></i> 正常生效</span>`;
                 }
 
                 tbodyHtml += `
@@ -2171,7 +2274,7 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
                         <td class="py-4 px-6 font-bold text-slate-200 text-xs">
                             ${getAssetName(l.assetId).split(' (')[0]}
                         </td>
-                        <td class="py-4 px-6 text-slate-300 text-xs">
+                        <td class="py-4 px-6 text-slate-300 text-xs font-sans">
                             <div class="font-bold text-slate-100">${l.type}</div>
                             <div class="text-[11px] text-gold/80 mt-1 font-mono"><i class="fa-solid fa-file-pdf"></i> 原檔: ${l.docRef}</div>
                         </td>
@@ -2198,7 +2301,7 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
 
             systemState.fuelLogs.forEach(log => {
                 logsHtml += `
-                    <div class="flex items-center justify-between p-3 bg-navy-950/40 rounded-lg border border-gold/10 text-xs">
+                    <div class="flex items-center justify-between p-3 bg-navy-950/40 rounded-lg border border-gold/10 text-xs font-sans">
                         <div>
                             <p class="text-slate-400">${log.date}</p>
                             <p class="font-bold text-slate-200">${log.amount} L @ ${getAssetName(log.assetId).split(' (')[0]}</p>
@@ -2274,35 +2377,34 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
                 let statusHtml = '';
 
                 if (isLowStock) {
-                    statusHtml = `<span class="text-amber-400 font-bold bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 rounded">需補貨</span>`;
-                    
+                    statusHtml = `<span class="text-amber-400 font-bold bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 rounded font-sans">需補貨</span>`;
                     const purchaseQty = (item.safety * 2) - item.current; 
                     const subtotal = purchaseQty * item.price;
                     totalShoppingBudget += subtotal;
 
                     shoppingHtml += `
-                        <div class="p-3 bg-navy-950/60 rounded-lg border border-gold/10 text-xs">
+                        <div class="p-3 bg-navy-950/60 rounded-lg border border-gold/10 text-xs font-sans">
                             <div class="flex justify-between font-bold text-slate-100">
                                 <span>${item.name}</span>
                                 <span class="text-gold font-mono">建議採購 +${purchaseQty} ${item.unit}</span>
                             </div>
                             <div class="flex justify-between text-[11px] text-slate-400 mt-1">
                                 <span>渠道: ${item.supplier}</span>
-                                <span class="font-mono">估價: HK$ ${subtotal.toLocaleString()}</span>
+                                <span class="font-mono font-semibold">估價: HK$ ${subtotal.toLocaleString()}</span>
                             </div>
                         </div>
                     `;
                 } else {
-                    statusHtml = `<span class="text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded">安全</span>`;
+                    statusHtml = `<span class="text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded font-sans">安全</span>`;
                 }
 
                 tableHtml += `
                     <tr class="hover:bg-navy-900/40 transition-colors">
-                        <td class="py-3 px-4 font-bold text-slate-200">${item.name}</td>
-                        <td class="py-3 px-4 text-slate-400">${item.category}</td>
+                        <td class="py-3 px-4 font-bold text-slate-200 font-sans">${item.name}</td>
+                        <td class="py-3 px-4 text-slate-400 font-sans">${item.category}</td>
                         <td class="py-3 px-4 text-center font-bold font-mono text-slate-100">${item.current} ${item.unit}</td>
                         <td class="py-3 px-4 text-center font-mono text-slate-400">${item.safety} ${item.unit}</td>
-                        <td class="py-3 px-4 text-slate-400 text-xs">${item.supplier}</td>
+                        <td class="py-3 px-4 text-slate-400 text-xs font-sans">${item.supplier}</td>
                         <td class="py-3 px-4 text-center">${statusHtml}</td>
                         <td class="py-3 px-4 text-right">
                             <button onclick="openEditModal('inventory', '${item.id}')" class="text-slate-400 hover:text-gold text-xs transition-colors"><i class="fa-solid fa-pencil"></i></button>
@@ -2357,8 +2459,8 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
                 contactsHtml += `
                     <div class="flex items-center justify-between pt-3 first:pt-0 group text-sm">
                         <div class="leading-relaxed">
-                            <p class="text-xs text-slate-400 font-medium">${contact.role}</p>
-                            <p class="text-sm font-semibold text-slate-200 mt-0.5">${contact.phone}</p>
+                            <p class="text-xs text-slate-400 font-medium font-sans">${contact.role}</p>
+                            <p class="text-sm font-semibold text-slate-200 mt-0.5 font-mono">${contact.phone}</p>
                         </div>
                         <div class="flex items-center space-x-2 opacity-60 group-hover:opacity-100 transition-opacity">
                             <button onclick="openEditModal('typhoon-contact', '${contact.id}')" class="text-slate-400 hover:text-gold text-xs transition-colors"><i class="fa-solid fa-pencil"></i></button>
@@ -2376,30 +2478,3 @@ function writeToSheet(ss, sheetName, headers, dataArray, keys) {
     </script>
 </body>
 </html>
-```
-eof
-
----
-
-### 💡 您的 Google Sheet 1 分鐘極速設定指南：
-
-我已經在代碼中完成了同步機制的無縫對接。現在只需要完成一次性設定，您的系統就會完全連接。步驟如下：
-
-1. **建立 Google 試算表**：
-   * 開啟您的 Google 雲端硬碟，新建一個空白的 **「Google 試算表 (Google Sheet)」**（不需做任何命名或表格調整）。
-2. **複製並貼上同步代碼**：
-   * 在管理系統網頁頂部，點選閃爍的 **「Google Sheet 同步未設定」** 按鈕。
-   * 點選控制台右側的 **「一鍵複製程式碼」**。
-   * 回到剛剛新建的 Google 試算表，點擊上方選單的 **「擴充功能」 -> 「Apps Script」**。
-   * 將裡面的原代碼全部刪除，**直接貼上**剛才複製的同步代碼，然後點擊儲存（磁碟圖示）。
-3. **發布網頁應用程式 (Deploy)**：
-   * 點選 Apps Script 視窗右上角的 **「部署」 -> 「新部署」**。
-   * 點擊左側設定齒輪圖示，選取 **「網頁應用程式 (Web App)」**。
-   * 填寫說明（例如：遊艇系統對接）。
-   * 將「執行身分」選為 **「我 (您的 Google 帳戶)」**。
-   * ⚠️ 將「誰能存取」選為 **「任何人 (Anyone)」**（這樣系統網頁才能向其發送同步請求）。
-   * 點選部署。此時 Google 會提示授予安全存取權限，請點選 **「授權存取」 -> 「進階」 -> 「前往遊艇系統（安全）」** 完成權限允許。
-4. **貼回系統網址**：
-   * 部署成功後，畫面上會出現一串 **「網頁應用程式網址 (Web App URL)」**。
-   * 將其複製，貼回我們系統網頁中 Google Sheet 面板的 **「Google Sheets WebApp 網址 (URL)」** 欄位。
-   * 點選 **「立即上傳同步 (Upload)」**，您的整套遊艇資產、生活物資、出航日誌等數據，就正式完成雲端託管了！
