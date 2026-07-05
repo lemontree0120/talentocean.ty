@@ -1,0 +1,2405 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>遊艇及附屬設備智能管理系統 - 專業級雲端同步控制台</title>
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            50: '#f0f3fa',
+                            100: '#e0e7f5',
+                            800: '#111a36',
+                            900: '#0b1329',
+                            950: '#030712',
+                        },
+                        gold: {
+                            DEFAULT: '#e2c275',
+                            dark: '#c29b38',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans TC', 'sans-serif'],
+                        serif: ['Cinzel', 'Noto Sans TC', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2 family=Cinzel:wght@500;700&family=Inter:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Chart.js for Trend Analysis -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- SheetJS for client-side Excel Parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        /* 奢華微光背景效果 */
+        .premium-bg {
+            background: radial-gradient(circle at 10% 20%, rgba(194, 155, 56, 0.08) 0%, transparent 45%),
+                        radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.04) 0%, transparent 45%),
+                        #030712;
+        }
+        /* 自訂滾動條 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #030712;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #111a36;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #e2c275;
+        }
+    </style>
+</head>
+<body class="premium-bg text-slate-200 font-sans min-h-screen overflow-x-hidden">
+
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- SIDEBAR NAVIGATION (固定寬度控制台) -->
+        <aside class="w-64 bg-navy-950/80 border-r border-gold/15 flex flex-col justify-between backdrop-blur-md shrink-0">
+            <div>
+                <!-- System Header Logo -->
+                <div class="p-6 border-b border-gold/10 flex items-center space-x-3">
+                    <i class="fa-solid fa-anchor text-2xl text-gold"></i>
+                    <div>
+                        <h1 class="font-serif font-bold text-sm text-slate-100 tracking-wider">TALENT OCEAN</h1>
+                        <p class="text-[10px] text-gold/80 tracking-widest uppercase">Smart Fleet Hub</p>
+                    </div>
+                </div>
+                
+                <!-- Nav Links -->
+                <nav class="p-4 space-y-1" id="sidebar-nav">
+                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 bg-gold/10 text-gold border-l-4 border-gold">
+                        <i class="fa-solid fa-chart-pie w-5"></i>
+                        <span>儀表板首頁</span>
+                    </button>
+                    <button onclick="switchTab('assets')" id="nav-assets" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800/50 hover:text-slate-100 transition-all duration-200 border-l-4 border-transparent">
+                        <i class="fa-solid fa-ship w-5"></i>
+                        <span>船隊與設備規格</span>
+                    </button>
+                    <button onclick="switchTab('logbook')" id="nav-logbook" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800/50 hover:text-slate-100 transition-all duration-200 border-l-4 border-transparent">
+                        <i class="fa-solid fa-compass w-5"></i>
+                        <span>航海與出航紀錄</span>
+                    </button>
+                    <button onclick="switchTab('maintenance')" id="nav-maintenance" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800/50 hover:text-slate-100 transition-all duration-200 border-l-4 border-transparent">
+                        <i class="fa-solid fa-wrench w-5"></i>
+                        <span>維修保養與預算</span>
+                    </button>
+                    <button onclick="switchTab('licenses')" id="nav-licenses" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800/50 hover:text-slate-100 transition-all duration-200 border-l-4 border-transparent">
+                        <i class="fa-solid fa-id-card w-5"></i>
+                        <span>保險與牌照提示</span>
+                    </button>
+                    <button onclick="switchTab('fuel')" id="nav-fuel" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800/50 hover:text-slate-100 transition-all duration-200 border-l-4 border-transparent">
+                        <i class="fa-solid fa-gas-pump w-5"></i>
+                        <span>油價記錄與趨勢</span>
+                    </button>
+                    <button onclick="switchTab('inventory')" id="nav-inventory" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800/50 hover:text-slate-100 transition-all duration-200 border-l-4 border-transparent">
+                        <i class="fa-solid fa-boxes-stacked w-5"></i>
+                        <span>遊艇生活與洗船物資</span>
+                    </button>
+                    <button onclick="switchTab('typhoon')" id="nav-typhoon" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800/50 hover:text-slate-100 transition-all duration-200 border-l-4 border-transparent">
+                        <i class="fa-solid fa-cloud-bolt w-5"></i>
+                        <span>颱風應急 SOP</span>
+                    </button>
+                </nav>
+            </div>
+            
+            <!-- Quick Info Footer -->
+            <div class="p-4 border-t border-gold/10 bg-navy-950/40 text-[11px] text-slate-500">
+                <div class="flex items-center justify-between mb-1">
+                    <span>系統基準日期:</span>
+                    <span class="text-gold font-mono" id="current-system-date">2026-07-05</span>
+                </div>
+                <div>Fleet Control Platform v2.5</div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT WORKSPACE -->
+        <main class="flex-1 flex flex-col overflow-hidden bg-navy-950/30 min-w-0">
+            <!-- Topbar (Header info) -->
+            <header class="h-16 border-b border-gold/10 flex items-center justify-between px-8 bg-navy-900/60 backdrop-blur-md shrink-0">
+                <div class="flex items-center space-x-2">
+                    <span class="text-xs text-gold font-bold tracking-widest uppercase" id="current-section-badge">Dashboard</span>
+                    <span class="text-slate-500 text-xs">/</span>
+                    <span class="text-slate-300 text-sm font-medium" id="current-section-title">數據綜合總覽</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <!-- Google Sheet Sync Status Button -->
+                    <button onclick="openModal('google-sheets-modal')" class="text-xs bg-navy-800 border border-gold/30 hover:border-gold hover:bg-navy-700 px-3 py-1.5 rounded-full text-slate-300 transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-cloud text-emerald-400 text-[10px] animate-pulse" id="g-sheets-pulse-icon"></i> 
+                        <span id="g-sheets-header-status-text">Google Sheet 同步未設定</span>
+                    </button>
+                    <span class="text-xs bg-navy-800 border border-gold/20 px-3 py-1.5 rounded-full text-slate-300">
+                        <i class="fa-solid fa-circle text-emerald-500 text-[8px] mr-1.5"></i> 
+                        TALENT OCEAN 狀態: 港內停泊中
+                    </span>
+                    <button onclick="openAddModal('add-asset-modal', '新增船隻/設備資產', '新增並保存')" class="text-xs bg-gradient-to-r from-gold/80 to-gold hover:from-gold hover:to-gold-dark text-navy-950 font-bold px-4 py-2 rounded-lg transition-all shadow-md flex items-center gap-1.5">
+                        <i class="fa-solid fa-plus"></i> 新增設備資產
+                    </button>
+                </div>
+            </header>
+
+            <!-- APP TABS CONTAINER -->
+            <div class="flex-1 overflow-y-auto p-8" id="tab-viewport">
+                
+                <!-- ================= 1. DASHBOARD OVERVIEW ================= -->
+                <div id="tab-dashboard" class="space-y-8 block">
+                    <!-- Metric Summary Row -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <div class="bg-navy-900/60 border border-gold/10 rounded-xl p-5 shadow-lg flex items-center space-x-4">
+                            <div class="p-3 bg-gold/10 rounded-lg text-gold"><i class="fa-solid fa-ship text-2xl"></i></div>
+                            <div>
+                                <p class="text-xs text-slate-400">列管船隻與小艇</p>
+                                <h3 class="text-xl font-bold font-serif text-slate-100" id="stat-total-assets">3 艘</h3>
+                            </div>
+                        </div>
+                        <div class="bg-navy-900/60 border border-gold/10 rounded-xl p-5 shadow-lg flex items-center space-x-4">
+                            <div class="p-3 bg-blue-500/10 rounded-lg text-sky-400"><i class="fa-solid fa-compass text-2xl"></i></div>
+                            <div>
+                                <p class="text-xs text-slate-400">累計出航日誌</p>
+                                <h3 class="text-xl font-bold font-serif text-slate-100 text-sky-400" id="stat-total-logs">3 筆紀錄</h3>
+                            </div>
+                        </div>
+                        <div class="bg-navy-900/60 border border-gold/10 rounded-xl p-5 shadow-lg flex items-center space-x-4">
+                            <div class="p-3 bg-amber-500/10 rounded-lg text-amber-400"><i class="fa-solid fa-boxes-stacked text-2xl"></i></div>
+                            <div>
+                                <p class="text-xs text-slate-400">低水位常備物資</p>
+                                <h3 class="text-2xl font-bold font-serif text-slate-100 text-amber-400" id="stat-low-stock">3 項</h3>
+                            </div>
+                        </div>
+                        <div class="bg-navy-900/60 border border-gold/10 rounded-xl p-5 shadow-lg flex items-center space-x-4">
+                            <div class="p-3 bg-emerald-500/10 rounded-lg text-emerald-400"><i class="fa-solid fa-wallet text-2xl"></i></div>
+                            <div>
+                                <p class="text-xs text-slate-400">當期保養實際支出</p>
+                                <h3 class="text-2xl font-bold font-serif text-slate-100 text-emerald-400" id="stat-total-spending">HK$ 111,200</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Alerts & Fast Action Row -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Critical License Alert (Dynamic Dashboard) -->
+                        <div class="bg-navy-900/60 border border-gold/10 rounded-xl p-6 shadow-lg lg:col-span-2">
+                            <div class="flex items-center justify-between mb-4">
+                                <h4 class="text-md font-bold text-slate-200 flex items-center gap-2">
+                                    <i class="fa-solid fa-bell text-gold animate-bounce"></i> 
+                                    證照到期監控警報 (與 2026-07-05 對比)
+                                </h4>
+                                <span class="text-xs bg-emerald-950/50 border border-emerald-500/30 text-emerald-400 px-2.5 py-0.5 rounded-full font-mono">系統即時監測</span>
+                            </div>
+                            <div class="space-y-3" id="dashboard-license-alerts">
+                                <!-- Generated Dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Quick Actions & Low Stock Checklist -->
+                        <div class="bg-navy-900/60 border border-gold/10 rounded-xl p-6 shadow-lg flex flex-col justify-between h-full">
+                            <div class="space-y-6">
+                                <div>
+                                    <h4 class="text-md font-bold text-slate-200 mb-3 flex items-center gap-2">
+                                        <i class="fa-solid fa-bolt text-gold"></i> 快速資產登記
+                                    </h4>
+                                    <div class="grid grid-cols-3 gap-2">
+                                        <button onclick="openAddModal('add-logbook-modal', '新增航海紀錄', '新增並保存')" class="flex flex-col items-center justify-center p-2.5 bg-navy-950/40 hover:bg-navy-800 border border-gold/10 hover:border-gold/30 rounded-lg text-[11px] text-slate-300 transition-all text-center gap-1">
+                                            <i class="fa-solid fa-compass text-gold text-sm"></i>
+                                            <span>登記日誌</span>
+                                        </button>
+                                        <button onclick="openAddModal('add-maintenance-modal', '新增保養維修紀錄', '新增並保存')" class="flex flex-col items-center justify-center p-2.5 bg-navy-950/40 hover:bg-navy-800 border border-gold/10 hover:border-gold/30 rounded-lg text-[11px] text-slate-300 transition-all text-center gap-1">
+                                            <i class="fa-solid fa-wrench text-gold text-sm"></i>
+                                            <span>申報保養</span>
+                                        </button>
+                                        <button onclick="openAddModal('add-fuel-modal', '新增加油與燃料紀錄', '新增並保存')" class="flex flex-col items-center justify-center p-2.5 bg-navy-950/40 hover:bg-navy-800 border border-gold/10 hover:border-gold/30 rounded-lg text-[11px] text-slate-300 transition-all text-center gap-1">
+                                            <i class="fa-solid fa-gas-pump text-gold text-sm"></i>
+                                            <span>記錄加油</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <h4 class="text-xs font-bold text-gold mb-3 flex items-center gap-2 font-serif uppercase tracking-wider">
+                                        <i class="fa-solid fa-clipboard-list"></i> 臨期物資缺貨清單 (點擊勾選補貨)
+                                    </h4>
+                                    <div class="space-y-2 max-h-48 overflow-y-auto" id="dashboard-stock-checklist">
+                                        <!-- Generated Dynamically -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-slate-800/60">
+                                <button onclick="switchTab('typhoon')" class="w-full py-2.5 px-3 bg-red-950/20 hover:bg-red-950/40 border border-red-500/20 hover:border-red-500/40 text-left rounded-lg text-xs transition-all flex justify-between items-center text-red-300">
+                                    <span><i class="fa-solid fa-cloud-bolt mr-2 text-red-400"></i> 香港防颱風應急 SOP 清單</span>
+                                    <i class="fa-solid fa-angle-right text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fleet Quick View -->
+                    <div class="bg-navy-900/60 border border-gold/10 rounded-xl p-6 shadow-lg">
+                        <div class="flex items-center justify-between mb-4">
+                            <h4 class="text-md font-bold text-slate-200 flex items-center gap-2">
+                                <i class="fa-solid fa-ship text-gold"></i> 列管資產與附屬設備
+                            </h4>
+                            <button onclick="switchTab('assets')" class="text-xs text-gold hover:underline">管理規格詳情</button>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="dashboard-assets-grid">
+                            <!-- Generated Dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= 2. FLEET ASSETS ================= -->
+                <div id="tab-assets" class="space-y-6 hidden">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-200">現役船隻與附屬設備資產庫</h3>
+                            <p class="text-xs text-slate-400">集中管理 Sanlorenzo SX76 母船、Williams Sportjet 小艇及 Seadoo 水上電單車規格。</p>
+                        </div>
+                        <button onclick="openAddModal('add-asset-modal', '新增船隻/設備資產', '新增並保存')" class="bg-gold hover:bg-gold-dark text-navy-950 text-xs font-bold px-4 py-2 rounded-lg transition-all flex items-center gap-1.5">
+                            <i class="fa-solid fa-plus"></i> 新增資產
+                        </button>
+                    </div>
+
+                    <!-- Yacht Hero Display -->
+                    <div class="bg-navy-900/40 border border-gold/20 rounded-xl overflow-hidden p-6 grid grid-cols-1 lg:grid-cols-3 gap-8 items-center animate-fade-in">
+                        <div class="lg:col-span-1">
+                            <img src="IMG_0265.jpg" alt="Sanlorenzo SX76" class="w-full h-48 object-cover rounded-lg border border-gold/20 shadow-lg" onerror="this.src='https://images.presentationgo.com/2025/09/aerial-view-cruise-ship.jpg';">
+                            <p class="text-[10px] text-slate-400 mt-2 text-center"><i class="fa-solid fa-camera"></i> 真實航行與細節照片請參考影像：IMG_0265.jpg</p>
+                        </div>
+                        <div class="lg:col-span-2 space-y-4">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-2xl font-serif text-slate-100">TALENT OCEAN <span class="text-sm font-sans text-gold">(Sanlorenzo SX76)</span></h3>
+                                <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs px-2.5 py-0.5 rounded-full">主母船 (Class IV 遊樂船 - 牌照號碼: 144937)</span>
+                            </div>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+                                <div>
+                                    <span class="text-slate-400 block">建造年份</span>
+                                    <span class="text-slate-200 font-bold">2022 年</span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-400 block">長度 / 寬度</span>
+                                    <span class="text-slate-200 font-bold">23.75 米 / 6.60 米</span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-400 block">主引擎動力</span>
+                                    <span class="text-slate-200 font-bold">2x Volvo Inboard (662 kW x 2)</span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-400 block">船體 / 燃料</span>
+                                    <span class="text-slate-200 font-bold">玻璃纖維 (GRP) / 柴油</span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-400 block">最大航速</span>
+                                    <span class="text-slate-200 font-bold">22 kn</span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-400 block">允許乘載人數</span>
+                                    <span class="text-slate-200 font-bold">最大 30 人 (2 船員 + 28 客人)</span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-400 block">避風停泊點</span>
+                                    <span class="text-slate-200 font-bold text-gold">香港仔南避風塘</span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-400 block">資產估值</span>
+                                    <span class="text-slate-200 font-bold text-cyan-400">EUR 5,000,000</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="assets-management-grid">
+                        <!-- Filled Dynamically -->
+                    </div>
+                </div>
+
+                <!-- ================= 3. VOYAGE LOGBOOK ================= -->
+                <div id="tab-logbook" class="space-y-6 hidden">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-200">航海出航日誌與引擎時數簿</h3>
+                            <p class="text-xs text-slate-400">追蹤母船、小艇及水上電單車的出航路線、引擎運轉時數 (Engine Hours) 及船長備註</p>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <button onclick="downloadExcelTemplate()" class="bg-navy-800 hover:bg-navy-700 border border-gold/30 hover:border-gold text-gold text-xs font-bold px-3 py-2 rounded-lg transition-all flex items-center gap-1.5 shadow-md">
+                                <i class="fa-solid fa-file-arrow-down"></i> 下載 Excel 範本
+                            </button>
+                            <label for="excel-upload-input" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-2 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shadow-md">
+                                <i class="fa-solid fa-file-excel"></i> 匯入 Excel 覆蓋
+                            </label>
+                            <input type="file" id="excel-upload-input" accept=".xlsx, .xls" class="hidden" onchange="handleExcelUpload(event)">
+                            <button onclick="openAddModal('add-logbook-modal', '新增航海出航紀錄', '寫入航海日誌')" class="bg-sky-500 hover:bg-sky-400 text-navy-950 text-xs font-bold px-4 py-2 rounded-lg transition-all flex items-center gap-1.5 shadow-md">
+                                <i class="fa-solid fa-compass"></i> 新增航海日誌
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Logbook table -->
+                    <div class="bg-navy-900/60 border border-gold/10 rounded-xl overflow-hidden shadow-lg">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-navy-950 border-b border-gold/15 text-gold text-xs font-bold tracking-wider font-serif">
+                                        <th class="py-4 px-6">日期</th>
+                                        <th class="py-4 px-6">出航載具</th>
+                                        <th class="py-4 px-6">航行路線與目的地</th>
+                                        <th class="py-4 px-6">引擎運作時數</th>
+                                        <th class="py-4 px-6">估計耗油/加油</th>
+                                        <th class="py-4 px-6">船長/水手</th>
+                                        <th class="py-4 px-6">天氣/海況備註</th>
+                                        <th class="py-4 px-6 text-right">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gold/10 text-sm text-slate-300" id="logbook-table-body">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= 4. MAINTENANCE & BUDGET ================= -->
+                <div id="tab-maintenance" class="space-y-6 hidden">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-200">維修保養細分項目與預算對照</h3>
+                            <p class="text-xs text-slate-400">精細拆分每項保養細節，動態評估實際開支偏差 (Variance)</p>
+                        </div>
+                        <button onclick="openAddModal('add-maintenance-modal', '登記保養維修預算明細', '新增紀錄並分析')" class="bg-gold hover:bg-gold-dark text-navy-950 text-xs font-bold px-4 py-2 rounded-lg transition-all flex items-center gap-1.5">
+                            <i class="fa-solid fa-plus"></i> 新增維修紀錄
+                        </button>
+                    </div>
+
+                    <!-- Budget summary card group -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-navy-900/60 border border-gold/10 rounded-xl p-5 shadow-lg flex items-center justify-between">
+                            <div>
+                                <p class="text-xs text-slate-400">總編列保養預算</p>
+                                <h3 class="text-2xl font-bold font-mono text-gold mt-1" id="maint-total-budget">HK$ --</h3>
+                            </div>
+                            <i class="fa-solid fa-calculator text-2xl text-gold/60"></i>
+                        </div>
+                        <div class="bg-navy-900/60 border border-gold/10 rounded-xl p-5 shadow-lg flex items-center justify-between">
+                            <div>
+                                <p class="text-xs text-slate-400">總實際維修開支</p>
+                                <h3 class="text-2xl font-bold font-mono text-cyan-400 mt-1" id="maint-total-actual">HK$ --</h3>
+                            </div>
+                            <i class="fa-solid fa-credit-card text-2xl text-cyan-500/60"></i>
+                        </div>
+                        <div class="bg-navy-900/60 border border-gold/10 rounded-xl p-5 shadow-lg flex items-center justify-between" id="maint-variance-card">
+                            <!-- Filled Dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Maintenance Table -->
+                    <div class="bg-navy-900/60 border border-gold/10 rounded-xl overflow-hidden shadow-lg">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-navy-950 border-b border-gold/15 text-gold text-xs font-bold tracking-wider font-serif">
+                                        <th class="py-4 px-6">資產項目</th>
+                                        <th class="py-4 px-6">分類項目</th>
+                                        <th class="py-4 px-6">保養維修項目 (拆分細項)</th>
+                                        <th class="py-4 px-6">預算價格 (HKD)</th>
+                                        <th class="py-4 px-6">實際價格 (HKD)</th>
+                                        <th class="py-4 px-6">開支偏差 (Variance)</th>
+                                        <th class="py-4 px-6 text-right">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gold/10 text-sm text-slate-300" id="maintenance-table-body">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= 5. LICENSES & ALERTS ================= -->
+                <div id="tab-licenses" class="space-y-6 hidden">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-200">證照與保險效期提示系統</h3>
+                            <p class="text-xs text-slate-400">依據 YACHTOWNERS 責任保單、海事處遊艇/小艇/摩托車牌照進行動態到期預警（支援實物 PDF 證件核對）</p>
+                        </div>
+                        <button onclick="openAddModal('add-license-modal', '登記保險及牌照效期', '儲存並啟動監測')" class="bg-gold hover:bg-gold-dark text-navy-950 text-xs font-bold px-4 py-2 rounded-lg transition-all flex items-center gap-1.5">
+                            <i class="fa-solid fa-plus"></i> 新增證照紀錄
+                        </button>
+                    </div>
+
+                    <div class="bg-navy-900/60 border border-gold/10 rounded-xl overflow-hidden shadow-lg">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-navy-950 border-b border-gold/15 text-gold text-xs font-bold tracking-wider font-serif">
+                                        <th class="py-4 px-6">適用資產</th>
+                                        <th class="py-4 px-6">證照保險與關聯 PDF 文件系統</th>
+                                        <th class="py-4 px-6">規費/保費 (HKD)</th>
+                                        <th class="py-4 px-6">到期日 (Expiry)</th>
+                                        <th class="py-4 px-6">剩餘天數</th>
+                                        <th class="py-4 px-6">到期狀態</th>
+                                        <th class="py-4 px-6 text-right">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gold/10 text-sm text-slate-300" id="licenses-table-body">
+                                    <!-- Dynamic Rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= 6. FUEL LOGS & TREND ================= -->
+                <div id="tab-fuel" class="space-y-6 hidden">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-200">燃油與營運價格走勢追蹤</h3>
+                            <p class="text-xs text-slate-400">記錄歷次添加燃油單價與加油量，動態繪製香港仔碼頭柴油/汽油價格波動趨勢圖</p>
+                        </div>
+                        <button onclick="openAddModal('add-fuel-modal', '記錄加油與燃料費用', '寫入加油記錄簿')" class="bg-gold hover:bg-gold-dark text-navy-950 text-xs font-bold px-4 py-2 rounded-lg transition-all flex items-center gap-1.5">
+                            <i class="fa-solid fa-plus"></i> 新增加油紀錄
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Chart Area -->
+                        <div class="bg-navy-900/60 border border-gold/10 rounded-xl p-6 shadow-lg lg:col-span-2">
+                            <h4 class="text-sm font-bold text-slate-200 mb-4 font-serif text-gold">船用燃油價格走勢趨勢 (HKD / Litre)</h4>
+                            <div class="h-64 relative">
+                                <canvas id="fuelTrendChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Fuel Log Table -->
+                        <div class="bg-navy-900/60 border border-gold/10 rounded-xl p-6 shadow-lg">
+                            <h4 class="text-sm font-bold text-slate-200 mb-4 font-serif text-gold">近期加油數據</h4>
+                            <div class="overflow-y-auto max-h-64 space-y-3" id="fuel-logs-list">
+                                <!-- Dynamic items -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= 7. INVENTORY & SHOPPING LIST ================= -->
+                <div id="tab-inventory" class="space-y-6 hidden">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-200">遊艇生活與洗船物資（自動採購系統）</h3>
+                            <p class="text-xs text-slate-400">追蹤常備廁紙、飲用水、洗船及拋光上蠟用品。低於安全水位時自動生成港幣採購估算表</p>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <button onclick="downloadInventoryTemplate()" class="bg-navy-800 hover:bg-navy-700 border border-gold/30 hover:border-gold text-gold text-xs font-bold px-3 py-2 rounded-lg transition-all flex items-center gap-1.5 shadow-md">
+                                <i class="fa-solid fa-file-arrow-down"></i> 下載採購登記範本
+                            </button>
+                            <label for="inventory-excel-upload" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-2 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shadow-md">
+                                <i class="fa-solid fa-file-excel"></i> 導入已購物品 Excel
+                            </label>
+                            <input type="file" id="inventory-excel-upload" accept=".xlsx, .xls" class="hidden" onchange="handleInventoryExcelUpload(event)">
+                            <button onclick="openAddModal('adjust-inventory-modal', '修改常備庫存存量', '修正庫存數據')" class="bg-gold hover:bg-gold-dark text-navy-950 text-xs font-bold px-4 py-2 rounded-lg transition-all flex items-center gap-1.5 shadow-md">
+                                <i class="fa-solid fa-sliders"></i> 調整現有庫存
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Inventory Level Check -->
+                        <div class="bg-navy-900/60 border border-gold/10 rounded-xl p-6 shadow-lg lg:col-span-2">
+                            <h4 class="text-sm font-bold text-slate-200 mb-4 font-serif text-gold">常備物資庫存狀況</h4>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left border-collapse text-xs">
+                                    <thead>
+                                        <tr class="bg-navy-950 border-b border-gold/15 text-gold font-bold">
+                                            <th class="py-3 px-4">物品名稱</th>
+                                            <th class="py-3 px-4">分類</th>
+                                            <th class="py-3 px-4 text-center">現有庫存</th>
+                                            <th class="py-3 px-4 text-center">安全水位</th>
+                                            <th class="py-3 px-4 text-center">補貨商渠道</th>
+                                            <th class="py-3 px-4 text-center">狀態</th>
+                                            <th class="py-3 px-4 text-right">操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gold/10 text-slate-300" id="inventory-table-body">
+                                        <!-- Dynamic rows -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Auto Generated Shopping List -->
+                        <div class="bg-navy-900/60 border border-gold/15 rounded-xl p-6 shadow-lg relative flex flex-col justify-between" style="border: 2px solid #e2c275;">
+                            <div>
+                                <div class="flex items-center justify-between mb-4 border-b border-gold/20 pb-3">
+                                    <h4 class="text-sm font-bold text-slate-100 flex items-center gap-2 font-serif">
+                                        <i class="fa-solid fa-cart-shopping text-gold"></i> 自動生成：出海補貨單
+                                    </h4>
+                                    <span class="text-[10px] bg-amber-500/10 border border-amber-500/30 text-amber-400 px-2.5 py-0.5 rounded-full font-bold">動態計算</span>
+                                </div>
+                                <div class="space-y-3 mb-6 overflow-y-auto max-h-64" id="auto-shopping-list">
+                                    <!-- Populated dynamically -->
+                                </div>
+                            </div>
+                            <div class="border-t border-gold/20 pt-4 bg-navy-900/80">
+                                <div class="flex justify-between items-center text-sm font-bold text-slate-200 mb-3">
+                                    <span>預算採購總價估計:</span>
+                                    <span class="text-lg text-gold font-serif" id="shopping-total-price">HK$ 0</span>
+                                </div>
+                                <button onclick="printProcurementOrder()" class="w-full py-2.5 bg-gold hover:bg-gold-dark text-navy-950 font-bold rounded-lg text-xs transition-all flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-print"></i> 導出採購估算表 (Print)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= 8. TYPHOON SOP ================= -->
+                <div id="tab-typhoon" class="space-y-6 hidden">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-200">颱風天氣防風應急 SOP 與避風部署</h3>
+                            <p class="text-xs text-slate-400">建立不同風球級別下的應急操作手冊，並列管必備聯絡名單。防風步驟與聯絡資訊現皆可自由新增與編輯。</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="openAddModal('add-typhoon-step-modal', '新增防風部署步驟', '新增步驟')" class="bg-gold hover:bg-gold-dark text-navy-950 text-xs font-bold px-3 py-2 rounded-lg transition-all flex items-center gap-1">
+                                <i class="fa-solid fa-plus"></i> 新增防風步驟
+                            </button>
+                            <button onclick="openAddModal('add-typhoon-contact-modal', '新增緊急防風聯絡人', '新增聯絡人')" class="bg-sky-500 hover:bg-sky-400 text-navy-950 text-xs font-bold px-3 py-2 rounded-lg transition-all flex items-center gap-1">
+                                <i class="fa-solid fa-address-book"></i> 新增聯絡人
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        
+                        <!-- Interactive Checklists -->
+                        <div class="bg-navy-900/60 border border-gold/10 rounded-xl p-6 shadow-lg lg:col-span-2 space-y-6">
+                            
+                            <!-- Category: T1/T3 -->
+                            <div>
+                                <h4 class="text-sm font-bold text-gold font-serif mb-3 flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-amber-500"></span> 1號 / 3號強風信號部署 (TALENT OCEAN 適用)
+                                </h4>
+                                <div class="space-y-3 pl-4" id="typhoon-t1t3-list">
+                                    <!-- Filled dynamically -->
+                                </div>
+                            </div>
+
+                            <!-- Category: T8+ -->
+                            <div class="border-t border-gold/10 pt-4">
+                                <h4 class="text-sm font-bold text-red-400 font-serif mb-3 flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span> 8號或以上烈風/暴風信號部署
+                                </h4>
+                                <div class="space-y-3 pl-4" id="typhoon-t8plus-list">
+                                    <!-- Filled dynamically -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Emergency Contacts -->
+                        <div class="bg-navy-900/60 border border-gold/10 rounded-xl p-6 shadow-lg space-y-4">
+                            <h4 class="text-sm font-bold text-slate-200 font-serif text-gold flex items-center gap-2">
+                                <i class="fa-solid fa-address-book"></i> 緊急防風與聯絡通訊錄
+                            </h4>
+                            <div class="space-y-3 divide-y divide-gold/10" id="typhoon-contacts-list">
+                                <!-- Filled dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- MODAL DIALOGS (彈出視窗與智能雲端中心) -->
+    <!-- ========================================================= -->
+
+    <!-- Google Sheets Sync Configuration Modal -->
+    <div id="google-sheets-modal" class="fixed inset-0 bg-navy-950/90 backdrop-blur-md flex items-center justify-center z-50 hidden">
+        <div class="bg-navy-900 border-2 border-gold/40 rounded-2xl w-full max-w-4xl p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModal('google-sheets-modal')" class="absolute top-6 right-6 text-slate-400 hover:text-gold transition-all"><i class="fa-solid fa-xmark text-2xl"></i></button>
+            
+            <div class="flex items-center space-x-3 mb-6">
+                <i class="fa-solid fa-file-excel text-3xl text-emerald-500"></i>
+                <div>
+                    <h3 class="text-xl font-bold font-serif text-gold">Google Sheets 雲端智能同步中心</h3>
+                    <p class="text-xs text-slate-400">將整套母船及小艇系統之數據（資產、日誌、保養、加油、物資、防颱 SOP）即時寫入或讀取自您的試算表</p>
+                </div>
+            </div>
+
+            <!-- Sync Control Dashboard -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <!-- Status & Connection -->
+                <div class="p-5 bg-navy-950/60 border border-gold/10 rounded-xl space-y-4 md:col-span-1">
+                    <h4 class="text-sm font-bold text-slate-200 flex items-center gap-2">
+                        <i class="fa-solid fa-tower-broadcast text-gold"></i> 連接狀態與控制
+                    </h4>
+                    
+                    <div class="space-y-2">
+                        <label class="block text-xs text-slate-400">Google Sheets WebApp 網址 (URL)</label>
+                        <input type="text" id="g-sheets-url-input" placeholder="https://script.google.com/macros/s/.../exec" class="w-full bg-navy-900 border border-gold/20 rounded-lg p-2 text-xs focus:border-gold outline-none text-slate-200 font-mono">
+                    </div>
+
+                    <div class="flex items-center justify-between py-2 border-t border-slate-800">
+                        <span class="text-xs text-slate-400">自動同步變更</span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="g-sheets-auto-sync" class="sr-only peer" checked>
+                            <div class="w-9 h-5 bg-navy-800 rounded-full peer peer-focus:ring-2 peer-focus:ring-gold/30 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-slate-400 after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-gold"></div>
+                        </label>
+                    </div>
+
+                    <div class="space-y-2 pt-2">
+                        <button onclick="syncToGoogleSheet()" class="w-full py-2.5 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold rounded-lg text-xs transition-all shadow flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> 立即上傳同步 (Upload)
+                        </button>
+                        <button onclick="fetchFromGoogleSheet()" class="w-full py-2.5 bg-navy-800 hover:bg-navy-700 border border-gold/20 hover:border-gold/50 text-gold font-bold rounded-lg text-xs transition-all flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-cloud-arrow-down"></i> 自試算表載入 (Download)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Integration Instructions -->
+                <div class="p-5 bg-navy-950/60 border border-gold/10 rounded-xl space-y-3 md:col-span-2">
+                    <h4 class="text-sm font-bold text-slate-200 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-info text-gold"></i> 快速三步連結您的 Google Sheet
+                    </h4>
+                    <ol class="text-xs text-slate-300 space-y-2 list-decimal pl-4 leading-relaxed">
+                        <li>新建一個空白的 <strong class="text-gold">Google 試算表</strong>。</li>
+                        <li>於試算表上方選單選取 <strong>「擴充功能」 -> 「Apps Script」</strong>。</li>
+                        <li>將下方文本框內的 <strong class="text-gold">Apps Script 程式碼</strong> 複製，覆蓋並貼入程式碼編輯器內。</li>
+                        <li>點擊右上角 <strong>「部署」 -> 「新部署」</strong>。選取類型為 <strong>「網頁應用程式」</strong>，並將「誰能存取」設為 <strong class="text-red-400">「任何人 (Anyone)」</strong>。</li>
+                        <li>複製部署完成後生成的「網頁應用程式網址」並貼入左方 URL 輸入框，即刻實現雙向即時雲端數據同步！</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Apps Script Template Code Area -->
+            <div class="space-y-3">
+                <div class="flex justify-between items-center">
+                    <span class="text-xs font-bold text-gold font-serif uppercase tracking-wider"><i class="fa-solid fa-code mr-1"></i> Google Apps Script 專用同步接收器程式碼</span>
+                    <button onclick="copyAppsScriptToClipboard()" class="text-xs bg-gold/10 border border-gold/30 hover:bg-gold hover:text-navy-950 text-gold px-3 py-1 rounded transition-all font-bold">
+                        <i class="fa-solid fa-copy mr-1"></i> 一鍵複製程式碼
+                    </button>
+                </div>
+                <div class="bg-navy-950 p-4 rounded-xl border border-gold/10 overflow-x-auto max-h-64 font-mono text-[11px] text-emerald-400 leading-relaxed" id="apps-script-code-text">
+// 貼上此程式碼至 Google 試算表的 Apps Script 中，然後發布為「網頁應用程式 (Web App)」
+function doGet() {
+  try {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var configSheet = ss.getSheetByName("CONFIG_STATE");
+    var val = "{}";
+    if (configSheet) {
+      val = configSheet.getRange(1, 1).getValue();
+    }
+    return ContentService.createTextOutput(val)
+      .setMimeType(ContentService.MimeType.JSON)
+      .setHeader("Access-Control-Allow-Origin", "*");
+  } catch(err) {
+    return ContentService.createTextOutput(JSON.stringify({status: "error", message: err.toString()}))
+      .setMimeType(ContentService.MimeType.JSON)
+      .setHeader("Access-Control-Allow-Origin", "*");
+  }
+}
+
+function doPost(e) {
+  try {
+    var stateData = JSON.parse(e.postData.contents);
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    
+    // 儲存原始 JSON 狀態備份以便完美還原
+    var configSheet = ss.getSheetByName("CONFIG_STATE") || ss.insertSheet("CONFIG_STATE");
+    configSheet.clear();
+    configSheet.getRange(1, 1).setValue(JSON.stringify(stateData));
+    
+    // 分流寫入至精美人類可讀的分頁報表
+    writeToSheet(ss, "Assets_船隊與設備規格", ["資產ID", "設備名稱", "資產類別", "詳細規格"], stateData.assets, ["id", "name", "type", "spec"]);
+    writeToSheet(ss, "Logbook_航海日誌", ["日期", "載具ID", "航行路線", "引擎時數", "油耗", "船長", "海況與備註"], stateData.logbook, ["date", "assetId", "route", "engineHours", "fuelUsed", "skipper", "remarks"]);
+    writeToSheet(ss, "Maintenance_維修保養", ["資產ID", "分類", "保養項目細分", "預算(HKD)", "實際支出(HKD)"], stateData.maintenance, ["assetId", "category", "item", "budget", "actual"]);
+    writeToSheet(ss, "Licenses_保險與牌照提示", ["資產ID", "證照名稱", "年保費(HKD)", "到期日", "對照文件原檔"], stateData.licenses, ["assetId", "type", "price", "expiry", "docRef"]);
+    writeToSheet(ss, "FuelLogs_加油記錄", ["加油日期", "對應船隻ID", "單價(HKD/L)", "加油量(L)"], stateData.fuelLogs, ["date", "assetId", "pricePerLitre", "amount"]);
+    writeToSheet(ss, "Inventory_洗船物資生活備品", ["物品名稱", "分類", "現有庫存", "安全水位", "補貨渠道"], stateData.inventory, ["name", "category", "current", "safety", "supplier"]);
+    
+    return ContentService.createTextOutput(JSON.stringify({status: "success", message: "Yacht database successfully synced!"}))
+      .setMimeType(ContentService.MimeType.JSON)
+      .setHeader("Access-Control-Allow-Origin", "*");
+  } catch(err) {
+    return ContentService.createTextOutput(JSON.stringify({status: "error", message: err.toString()}))
+      .setMimeType(ContentService.MimeType.JSON)
+      .setHeader("Access-Control-Allow-Origin", "*");
+  }
+}
+
+function writeToSheet(ss, sheetName, headers, dataArray, keys) {
+  var sheet = ss.getSheetByName(sheetName) || ss.insertSheet(sheetName);
+  sheet.clear();
+  sheet.appendRow(headers);
+  if (!dataArray || dataArray.length === 0) return;
+  var rows = [];
+  dataArray.forEach(function(item) {
+    var row = [];
+    keys.forEach(function(key) {
+      row.push(item[key] || "");
+    });
+    rows.push(row);
+  });
+  sheet.getRange(2, 1, rows.length, headers.length).setValues(rows);
+}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Asset Modal -->
+    <div id="add-asset-modal" class="fixed inset-0 bg-navy-950/80 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+        <div class="bg-navy-900 border border-gold/20 rounded-xl w-full max-w-md p-6 shadow-2xl relative">
+            <button onclick="closeModal('add-asset-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-100"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-md font-bold font-serif text-gold mb-4">新增船隻/設備資產</h3>
+            <form id="add-asset-form" class="space-y-4" onsubmit="handleFormSubmit(event, 'asset')">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">設備/資產名稱</label>
+                    <input type="text" id="asset-name" required placeholder="例如：Yamaha Jet Ski FX" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-sm focus:border-gold outline-none text-slate-200">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">資產類別</label>
+                    <select id="asset-type" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-sm focus:border-gold outline-none text-slate-200">
+                        <option value="遊艇">母船 (遊艇)</option>
+                        <option value="水上摩托車">水上摩托車</option>
+                        <option value="附屬小艇">附屬小艇</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">詳細規格與存放地點</label>
+                    <input type="text" id="asset-spec" required placeholder="如：300 HP | 存放於升降甲板" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-sm focus:border-gold outline-none text-slate-200">
+                </div>
+                <button type="submit" class="w-full py-2.5 bg-gold hover:bg-gold-dark text-navy-950 font-bold rounded-lg text-sm transition-all">儲存數據</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Voyage Logbook Modal -->
+    <div id="add-logbook-modal" class="fixed inset-0 bg-navy-950/80 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+        <div class="bg-navy-900 border border-gold/20 rounded-xl w-full max-w-md p-6 shadow-2xl relative">
+            <button onclick="closeModal('add-logbook-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-100"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-md font-bold font-serif text-gold mb-4">新增航海出航紀錄</h3>
+            <form id="add-logbook-form" class="space-y-4" onsubmit="handleFormSubmit(event, 'logbook')">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">出航載具</label>
+                    <select id="log-asset-select" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-sm focus:border-gold outline-none text-slate-200">
+                        <!-- Filled Dynamically -->
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">航行日期</label>
+                    <input type="date" id="log-date" required class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-sm focus:border-gold outline-none text-slate-200">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">目的地與航線</label>
+                    <input type="text" id="log-route" required placeholder="如：香港仔 -> 淺水灣 -> 熨波洲 -> 香港仔" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-sm focus:border-gold outline-none text-slate-200">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">引擎時數 (Hrs)</label>
+                        <input type="text" id="log-hours" required placeholder="如：156.4 hrs" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-sm focus:border-gold outline-none text-slate-200">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">消耗/添加油量 (L)</label>
+                        <input type="text" id="log-fuel" required placeholder="如：120 L" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-sm focus:border-gold outline-none text-slate-200">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">值班船長/水手</label>
+                        <input type="text" id="log-skipper" required placeholder="如：Captain Leo" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-sm focus:border-gold outline-none text-slate-200">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">天氣與海況</label>
+                        <input type="text" id="log-weather" required placeholder="如：晴朗, 2級風" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-sm focus:border-gold outline-none text-slate-200">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">航行備註</label>
+                    <input type="text" id="log-remarks" placeholder="如：引擎水溫正常，附屬艇落水測試正常" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-sm focus:border-gold outline-none text-slate-200">
+                </div>
+                <button type="submit" class="w-full py-2.5 bg-gold hover:bg-gold-dark text-navy-950 font-bold rounded-lg text-sm transition-all">寫入日誌數據</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Maintenance Modal -->
+    <div id="add-maintenance-modal" class="fixed inset-0 bg-navy-950/80 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+        <div class="bg-navy-900 border border-gold/20 rounded-xl w-full max-w-md p-6 shadow-2xl relative">
+            <button onclick="closeModal('add-maintenance-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-100"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-md font-bold font-serif text-gold mb-4">登記保養維修預算明細</h3>
+            <form id="add-maintenance-form" class="space-y-4" onsubmit="handleFormSubmit(event, 'maintenance')">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">對應資產</label>
+                    <select id="maint-asset-select" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-sm focus:border-gold outline-none text-slate-200">
+                        <!-- Filled Dynamically -->
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">保養預算分類</label>
+                    <select id="maint-category" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-sm focus:border-gold outline-none text-slate-200">
+                        <option value="船體與清潔">船體與清潔</option>
+                        <option value="引擎動力">引擎動力</option>
+                        <option value="推進系統">推進系統</option>
+                        <option value="電子與通訊">電子與通訊</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">保養維修具體內容</label>
+                    <input type="text" id="maint-item" required placeholder="如：更換機油、過濾器耗材" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-sm focus:border-gold outline-none text-slate-200">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">預算價格 (HKD)</label>
+                        <input type="number" id="maint-budget" required placeholder="估值" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-sm focus:border-gold outline-none text-slate-200">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">實際價格 (HKD)</label>
+                        <input type="number" id="maint-actual" required placeholder="實付" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-sm focus:border-gold outline-none text-slate-200">
+                    </div>
+                </div>
+                <button type="submit" class="w-full py-2.5 bg-gold hover:bg-gold-dark text-navy-950 font-bold rounded-lg text-sm transition-all">儲存維修紀錄</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add License Modal -->
+    <div id="add-license-modal" class="fixed inset-0 bg-navy-950/80 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+        <div class="bg-navy-900 border border-gold/20 rounded-xl w-full max-w-md p-6 shadow-2xl relative">
+            <button onclick="closeModal('add-license-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-100"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-md font-bold font-serif text-gold mb-4">登記保險及牌照效期</h3>
+            <form id="add-license-form" class="space-y-4" onsubmit="handleFormSubmit(event, 'licenses')">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">適用船隊資產</label>
+                    <select id="license-asset-select" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-sm focus:border-gold outline-none text-slate-200">
+                        <!-- Filled Dynamically -->
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">證照保險名稱</label>
+                    <input type="text" id="license-type" required placeholder="如：第三者責任綜合險" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-sm focus:border-gold outline-none text-slate-200">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">年費/保費 (HKD)</label>
+                    <input type="number" id="license-price" required placeholder="HKD / 年" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-sm focus:border-gold outline-none text-slate-200">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">到期日期 (Expiry Date)</label>
+                    <input type="date" id="license-expiry" required class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-sm focus:border-gold outline-none text-slate-200">
+                </div>
+                <button type="submit" class="w-full py-2.5 bg-gold hover:bg-gold-dark text-navy-950 font-bold rounded-lg text-sm transition-all">儲存證照數據</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Fuel Modal -->
+    <div id="add-fuel-modal" class="fixed inset-0 bg-navy-950/80 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+        <div class="bg-navy-900 border border-gold/20 rounded-xl w-full max-w-md p-6 shadow-2xl relative">
+            <button onclick="closeModal('add-fuel-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-100"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-md font-bold font-serif text-gold mb-4">記錄加油與燃料費用</h3>
+            <form id="add-fuel-form" class="space-y-4" onsubmit="handleFormSubmit(event, 'fuel')">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">對應船隻</label>
+                    <select id="fuel-asset-select" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-sm focus:border-gold outline-none text-slate-200">
+                        <!-- Filled Dynamically -->
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">加油日期</label>
+                    <input type="date" id="fuel-date" required class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-sm focus:border-gold outline-none text-slate-200">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">單價 (HKD / L)</label>
+                        <input type="number" step="0.1" id="fuel-price" required placeholder="如：22.8" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-sm focus:border-gold outline-none text-slate-200">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">加油量 (Litre)</label>
+                        <input type="number" id="fuel-amount" required placeholder="如：800" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-sm focus:border-gold outline-none text-slate-200">
+                    </div>
+                </div>
+                <button type="submit" class="w-full py-2.5 bg-gold hover:bg-gold-dark text-navy-950 font-bold rounded-lg text-sm transition-all">儲存油耗紀錄</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Adjust Inventory Modal -->
+    <div id="adjust-inventory-modal" class="fixed inset-0 bg-navy-950/80 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+        <div class="bg-navy-900 border border-gold/20 rounded-xl w-full max-w-md p-6 shadow-2xl relative">
+            <button onclick="closeModal('adjust-inventory-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-100"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-md font-bold font-serif text-gold mb-4">修改常備庫存存量</h3>
+            <form id="adjust-inventory-form" class="space-y-4" onsubmit="handleFormSubmit(event, 'inventory')">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">選擇常備物品</label>
+                    <select id="inventory-item-select" onchange="loadCurrentStock(this.value)" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-sm focus:border-gold outline-none text-slate-200">
+                        <!-- Filled Dynamically -->
+                    </select>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">現有庫存量</label>
+                        <input type="number" id="inventory-current" required class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-sm focus:border-gold outline-none text-slate-200">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">安全水位存量</label>
+                        <input type="number" id="inventory-safety" required class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-sm focus:border-gold outline-none text-slate-200">
+                    </div>
+                </div>
+                <button type="submit" class="w-full py-2.5 bg-gold hover:bg-gold-dark text-navy-950 font-bold rounded-lg text-sm transition-all">修正庫存數據</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Typhoon SOP Step Modal -->
+    <div id="add-typhoon-step-modal" class="fixed inset-0 bg-navy-950/80 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+        <div class="bg-navy-900 border border-gold/20 rounded-xl w-full max-w-md p-6 shadow-2xl relative">
+            <button onclick="closeModal('add-typhoon-step-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-100"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-md font-bold font-serif text-gold mb-4">新增防風應急部署步驟</h3>
+            <form id="add-typhoon-step-form" class="space-y-4" onsubmit="handleFormSubmit(event, 'typhoon-step')">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">信號級別分類</label>
+                    <select id="typhoon-category" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-sm focus:border-gold outline-none text-slate-200">
+                        <option value="t1t3">1號 / 3號強風信號</option>
+                        <option value="t8plus">8號或以上烈風/暴風信號</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">防風應急部署措施 (具體說明)</label>
+                    <textarea id="typhoon-text" required rows="3" placeholder="例如：【加固纜繩】TALENT OCEAN 於香港仔避風塘加掛雙重防颱風主纜繩 (Mooring lines)。" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-sm focus:border-gold outline-none text-slate-200 leading-relaxed"></textarea>
+                </div>
+                <button type="submit" class="w-full py-2.5 bg-gold hover:bg-gold-dark text-navy-950 font-bold rounded-lg text-sm transition-all">儲存部署步驟</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Typhoon Contact Modal -->
+    <div id="add-typhoon-contact-modal" class="fixed inset-0 bg-navy-950/80 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+        <div class="bg-navy-900 border border-gold/20 rounded-xl w-full max-w-md p-6 shadow-2xl relative">
+            <button onclick="closeModal('add-typhoon-contact-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-100"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-md font-bold font-serif text-gold mb-4">新增緊急防風聯絡人</h3>
+            <form id="add-typhoon-contact-form" class="space-y-4" onsubmit="handleFormSubmit(event, 'typhoon-contact')">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">機構與聯絡職位/姓名</label>
+                    <input type="text" id="contact-role" required placeholder="如：值班船長 (Captain Leo)" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-sm focus:border-gold outline-none text-slate-200">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">聯絡電話</label>
+                    <input type="text" id="contact-phone" required placeholder="如：+852 9876 5432" class="w-full bg-navy-950 border border-gold/20 rounded-lg p-2.5 text-sm focus:border-gold outline-none text-slate-200">
+                </div>
+                <button type="submit" class="w-full py-2.5 bg-gold hover:bg-gold-dark text-navy-950 font-bold rounded-lg text-sm transition-all">儲存聯絡資訊</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Custom Confirm Modal (Strict Anti-Alert Guardrail) -->
+    <div id="confirm-modal" class="fixed inset-0 bg-navy-950/80 backdrop-blur-sm flex items-center justify-center z-[60] hidden">
+        <div class="bg-navy-900 border border-gold/20 rounded-xl w-full max-w-xs p-6 shadow-2xl text-center">
+            <i class="fa-solid fa-triangle-exclamation text-amber-500 text-3xl mb-3 animate-pulse"></i>
+            <h3 class="text-sm font-bold text-slate-100 mb-4">確認要刪除此項目嗎？數據將無法恢復。</h3>
+            <div class="flex justify-center space-x-3">
+                <button id="confirm-cancel-btn" class="px-4 py-2 bg-navy-800 hover:bg-navy-700 text-slate-300 text-xs font-bold rounded-lg transition-all">取消</button>
+                <button id="confirm-ok-btn" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white text-xs font-bold rounded-lg transition-all">確認刪除</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- JAVASCRIPT STATE ENGINE & CORE CALCULATION LOGIC -->
+    <!-- ========================================================= -->
+    <script>
+        const systemState = {
+            currentDate: '2026-07-05',
+            editMode: false,
+            editId: null,
+            assets: [
+                { id: 'a1', name: 'TALENT OCEAN (Sanlorenzo SX76)', type: '遊艇', spec: '23.75米 (77.9呎) | Volvo 雙引擎 1324kW | 船籍港: 香港 | 正常泊位: 香港仔南避風塘 | 照片對照: IMG_0265.jpg', icon: 'fa-ship' },
+                { id: 'a2', name: 'Unnamed Seadoo GTR 230', type: '水上摩托車', spec: '2022年 | 長度 3.32米 | Rotax Ace 171.58kW | 船牌 713250 | 黑黃色', icon: 'fa-person-skiing-water' },
+                { id: 'a3', name: 'Unnamed Williams Sportjet 395', type: '附屬小艇', spec: '2023年 | 長度 3.90米 | Rotax Ace 66.19kW | 船牌 713367 | 白灰色', icon: 'fa-anchor' }
+            ],
+            logbook: [
+                { id: 'log1', date: '2026-05-15', assetId: 'a1', route: '香港仔南避風塘 -> 深水灣 -> 南丫島 -> 香港仔', engineHours: '145.2 hrs', fuelUsed: '180 L', skipper: 'Captain Leo', weather: '晴朗, 微風', remarks: '船東家庭日常休閒出航，Williams 395 下水娛樂，運作一切正常。' },
+                { id: 'log2', date: '2026-06-20', assetId: 'a1', route: '香港仔 -> 淺水灣 -> 熨波洲 -> 香港仔', engineHours: '152.8 hrs', fuelUsed: '115 L', skipper: 'Captain Leo', weather: '多雲, 稍有湧浪', remarks: '引擎月度例行運轉試航，雙引擎水溫及增壓數據在正常區間。' },
+                { id: 'log3', date: '2026-07-02', assetId: 'a1', route: '香港仔南避風塘 -> 喜靈洲避風塘預備移防', engineHours: '158.5 hrs', fuelUsed: '90 L', skipper: 'Captain Leo', weather: '陣雨, 偏東風4-5級', remarks: '因遠期低壓區逼近進行颱風防風預防性巡航，車載設備與安全物資皆已就位。' }
+            ],
+            maintenance: [
+                { id: 'm1', assetId: 'a1', category: '船體與清潔', item: '更換船底鋅防蝕塊 (Anodes) 與船身清潔', budget: 20000, actual: 19500 },
+                { id: 'm2', assetId: 'a1', category: '引擎動力', item: 'Volvo 雙引擎機油、濾清器及防蝕系統更換', budget: 65000, actual: 68000 },
+                { id: 'm3', assetId: 'a2', category: '引擎動力', item: 'Seadoo GTR 火花塞更換與電池例行維護', budget: 8000, actual: 9500 },
+                { id: 'm4', assetId: 'a3', category: '推進系統', item: 'Williams 395 噴射泵葉輪與管路保養', budget: 15000, actual: 14200 }
+            ],
+            licenses: [
+                { id: 'l1', assetId: 'a1', type: 'YACHTOWNERS P&I 責任險 (10億美元保額限額 / 意外自付 USD 2,500)', expiry: '2027-03-27', price: 68000, docRef: 'LF Certificate - 94131 - 1239269 - TALENT OCEAN[758000] - P&I - 01 2.pdf' },
+                { id: 'l2', assetId: 'a1', type: '海事處本地船隻運作牌照 (TALENT OCEAN - 144937)', expiry: '2027-05-08', price: 8500, docRef: 'TALENT OCEAN 遊艇牌照_ 08-05-2027.pdf' },
+                { id: 'l3', assetId: 'a2', type: '海事處本地船隻運作牌照 (Seadoo GTR - 713250)', expiry: '2027-05-08', price: 1200, docRef: '水上電單車牌照_ 08-05-2027.pdf' },
+                { id: 'l4', assetId: 'a3', type: '海事處本地船隻運作牌照 (Williams Sportjet - 713367)', expiry: '2027-05-10', price: 2500, docRef: '小艇牌照_10-05-2027.pdf' }
+            ],
+            fuelLogs: [
+                { id: 'f1', date: '2025-06-20', assetId: 'a1', pricePerLitre: 16.2, amount: 1000 },
+                { id: 'f2', date: '2025-12-05', assetId: 'a1', pricePerLitre: 19.5, amount: 900 },
+                { id: 'f3', date: '2026-03-22', assetId: 'a1', pricePerLitre: 21.0, amount: 750 },
+                { id: 'f4', date: '2026-07-01', assetId: 'a1', pricePerLitre: 22.8, amount: 1200 }
+            ],
+            inventory: [
+                { id: 'i1', name: '豪華船用環保易分解廁紙 (48卷/箱)', category: '生活消耗品', current: 3, safety: 10, unit: '箱', price: 180, supplier: 'HKTVmall 採購配送' },
+                { id: 'i2', name: '屈臣氏 4.5L 桶裝純淨蒸餾水', category: '生活消耗品', current: 5, safety: 15, unit: '樽', price: 25, supplier: '屈臣氏蒸餾水直銷代理' },
+                { id: 'i3', name: 'Meguiar\'s Premium 船用高光澤洗船清潔水', category: '洗船及清潔用品', current: 1, safety: 4, unit: '支', price: 320, supplier: '香港仔萬里船具店' },
+                { id: 'i4', name: '3M Marine Ultra 去污拋光硬蠟罐裝', category: '洗船及清潔用品', current: 1, safety: 3, unit: '罐', price: 450, supplier: '香港仔萬里船具店' },
+                { id: 'i5', name: 'SOLAS 合規救生衣 (成人紅色規格)', category: '安全物資', current: 32, safety: 30, unit: '件', price: 400, supplier: '香港船具服務中心' }
+            ],
+            typhoonSop: [
+                { id: 'ts1', category: 't1t3', text: '【加固纜繩】TALENT OCEAN 於香港仔避風塘加掛雙重防颱風主纜繩 (Mooring lines)。', checked: true },
+                { id: 'ts2', category: 't1t3', text: '【防撞氣墊】全船兩側加掛不少於 8-10 隻大號防撞球 (Fenders)。', checked: false },
+                { id: 'ts3', category: 't1t3', text: '【收置甲板】收攏並鎖緊飛橋遮陽篷架，將甲板活動家具收妥回客艙。', checked: false },
+                { id: 'ts4', category: 't8plus', text: '【附屬艇隻避險】Williams 395 吊掛上岸並移存室內乾燥倉庫，避免與母船碰撞。', checked: false },
+                { id: 'ts5', category: 't8plus', text: '【摩托車移防】Seadoo GTR 230 移防至香港仔室內防波船庫，並繫緊防颱索。', checked: false },
+                { id: 'ts6', category: 't8plus', text: '【排水與電力監測】調度自動 Bilge Pump (排水泵) 測試，保持遠端船體定位 GPS 連線。', checked: false }
+            ],
+            emergencyContacts: [
+                { id: 'ec1', role: '值班船長 (Captain Leo)', phone: '+852 9876 5432' },
+                { id: 'ec2', role: '大副及水手長 (Ah Ming)', phone: '+852 9123 4567' },
+                { id: 'ec3', role: '香港仔避風塘控制室 (Aberdeen Office)', phone: '+852 2552 0113' },
+                { id: 'ec4', role: 'P&I 保險聯絡 (YACHTOWNERS Admiralty)', phone: '+852 2522 2118' }
+            ]
+        };
+
+        let fuelChartInstance = null;
+        let deleteContext = null;
+
+        function copyAppsScriptToClipboard() {
+            const codeText = document.getElementById('apps-script-code-text').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeText;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            try {
+                document.execCommand('copy');
+                alertMessage("Google Apps Script 複製成功！請依照說明貼入 Apps Script 編輯器內。", "emerald");
+            } catch (err) {
+                alertMessage("複製失敗，請手動複製程式碼框內的所有文字。", "red");
+            }
+            document.body.removeChild(tempTextArea);
+        }
+
+        async function syncToGoogleSheet() {
+            const url = document.getElementById('g-sheets-url-input').value.trim();
+            if (!url) {
+                alertMessage("請先輸入您的 Google Apps Script 網頁應用程式網址！", "gold");
+                return;
+            }
+
+            setSyncingHeaderStatus("同步中...");
+            try {
+                // 利用 text/plain 繞過複雜的 CORS Preflight 機制
+                const response = await fetch(url, {
+                    method: 'POST',
+                    mode: 'cors',
+                    body: JSON.stringify(systemState)
+                });
+                const result = await response.json();
+                if (result.status === "success") {
+                    alertMessage("數據已完美同步至 Google Sheet！", "emerald");
+                    setSyncingHeaderStatus("已同步至 Sheet");
+                    localStorage.setItem('yacht_g_sheets_url', url);
+                } else {
+                    throw new Error(result.message || "未知錯誤");
+                }
+            } catch (err) {
+                console.error(err);
+                alertMessage("同步失敗，請確認 Apps Script 部署權限是否設為「任何人」！", "red");
+                setSyncingHeaderStatus("同步失敗");
+            }
+        }
+
+        async function fetchFromGoogleSheet() {
+            const url = document.getElementById('g-sheets-url-input').value.trim();
+            if (!url) {
+                alertMessage("請先輸入您的 Google Apps Script 網頁應用程式網址！", "gold");
+                return;
+            }
+
+            setSyncingHeaderStatus("讀取中...");
+            try {
+                const response = await fetch(url);
+                const cloudData = await response.json();
+                
+                if (cloudData && cloudData.assets && cloudData.logbook) {
+                    // 更新本地狀態
+                    systemState.assets = cloudData.assets;
+                    systemState.logbook = cloudData.logbook;
+                    systemState.maintenance = cloudData.maintenance;
+                    systemState.licenses = cloudData.licenses;
+                    systemState.fuelLogs = cloudData.fuelLogs;
+                    systemState.inventory = cloudData.inventory;
+                    systemState.typhoonSop = cloudData.typhoonSop;
+                    systemState.emergencyContacts = cloudData.emergencyContacts;
+
+                    initApp();
+                    alertMessage("已成功從 Google Sheet 下載最新數據！", "emerald");
+                    setSyncingHeaderStatus("雲端同步中");
+                    localStorage.setItem('yacht_g_sheets_url', url);
+                    closeModal('google-sheets-modal');
+                } else {
+                    alertMessage("讀取成功，但雲端試算表內尚無有效系統數據！建議您先執行「上傳同步」。", "gold");
+                    setSyncingHeaderStatus("未同步");
+                }
+            } catch (err) {
+                console.error(err);
+                alertMessage("讀取雲端試算表數據失敗，請確認 WebApp 網址正確！", "red");
+                setSyncingHeaderStatus("連線失敗");
+            }
+        }
+
+        function setSyncingHeaderStatus(statusText) {
+            const headerBtnText = document.getElementById('g-sheets-header-status-text');
+            const pulseIcon = document.getElementById('g-sheets-pulse-icon');
+            if (headerBtnText) {
+                headerBtnText.textContent = statusText;
+            }
+            if (pulseIcon) {
+                if (statusText.includes("中")) {
+                    pulseIcon.className = "fa-solid fa-sync fa-spin text-amber-400 text-[10px]";
+                } else if (statusText.includes("已") || statusText.includes("同步")) {
+                    pulseIcon.className = "fa-solid fa-cloud text-emerald-400 text-[10px]";
+                } else {
+                    pulseIcon.className = "fa-solid fa-cloud text-slate-400 text-[10px]";
+                }
+            }
+        }
+
+        function autoSyncIfEnabled() {
+            const autoSyncEnabled = document.getElementById('g-sheets-auto-sync').checked;
+            const url = document.getElementById('g-sheets-url-input').value.trim();
+            if (autoSyncEnabled && url) {
+                syncToGoogleSheet();
+            }
+        }
+
+        function downloadExcelTemplate() {
+            const headers = [
+                "出航日期 (YYYY-MM-DD)", 
+                "出航載具 (TALENT OCEAN / Williams / Seadoo)", 
+                "航行路線與目的地", 
+                "引擎運作時數 (例如: 158.5 hrs)", 
+                "消耗/添加油量 (例如: 90 L)", 
+                "值班船長/水手", 
+                "天氣/海況備註"
+            ];
+            
+            const sampleRows = [
+                ["2026-07-02", "TALENT OCEAN (SX76)", "香港仔南避風塘 -> 深水灣 -> 南丫島 -> 香港仔", "158.5 hrs", "90 L", "Captain Leo", "陣雨, 偏東風4-5級"],
+                ["2026-07-03", "Unnamed Williams Sportjet 395", "香港仔避風塘内吊移與測試", "42.1 hrs", "15 L", "Ah Ming", "多雲"],
+                ["2026-07-03", "Unnamed Seadoo GTR 230", "香港仔 -> 深水灣 -> 香港仔", "28.3 hrs", "25 L", "Captain Leo", "晴朗"]
+            ];
+
+            const worksheetData = [headers, ...sampleRows];
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(worksheetData);
+            
+            const colWidths = [
+                { wch: 22 }, { wch: 35 }, { wch: 45 }, { wch: 25 }, { wch: 20 }, { wch: 18 }, { wch: 55 }
+            ];
+            ws['!cols'] = colWidths;
+
+            XLSX.utils.book_append_sheet(wb, ws, "航海紀錄範本");
+            XLSX.writeFile(wb, `Yacht_Voyage_Logbook_Template.xlsx`);
+        }
+
+        function handleExcelUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    const rows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                    if (rows.length <= 1) {
+                        alertMessage("匯入失敗：Excel 檔案中無有效數據列！", "red");
+                        return;
+                    }
+
+                    const headers = rows[0].map(h => String(h || '').trim());
+                    let dateIdx = -1, assetIdx = -1, routeIdx = -1, hoursIdx = -1, fuelIdx = -1, skipperIdx = -1, remarksIdx = -1;
+                    
+                    headers.forEach((header, index) => {
+                        if (header.includes("日期") || header.toLowerCase().includes("date")) dateIdx = index;
+                        if (header.includes("載具") || header.toLowerCase().includes("vessel") || header.toLowerCase().includes("asset")) assetIdx = index;
+                        if (header.includes("路線") || header.toLowerCase().includes("route") || header.toLowerCase().includes("destination")) routeIdx = index;
+                        if (header.includes("時數") || header.toLowerCase().includes("hour")) hoursIdx = index;
+                        if (header.includes("油") || header.toLowerCase().includes("fuel")) fuelIdx = index;
+                        if (header.includes("船長") || header.includes("水手") || header.toLowerCase().includes("skipper") || header.toLowerCase().includes("crew")) skipperIdx = index;
+                        if (header.includes("備註") || header.toLowerCase().includes("remark") || header.toLowerCase().includes("weather")) remarksIdx = index;
+                    });
+
+                    if (dateIdx === -1) dateIdx = 0;
+                    if (assetIdx === -1) assetIdx = 1;
+                    if (routeIdx === -1) routeIdx = 2;
+                    if (hoursIdx === -1) hoursIdx = 3;
+                    if (fuelIdx === -1) fuelIdx = 4;
+                    if (skipperIdx === -1) skipperIdx = 5;
+                    if (remarksIdx === -1) remarksIdx = 6;
+
+                    const newLogs = [];
+                    
+                    for (let i = 1; i < rows.length; i++) {
+                        const row = rows[i];
+                        if (!row || row.length === 0 || !row[dateIdx]) continue;
+
+                        const assetNameStr = String(row[assetIdx] || '').toUpperCase();
+                        let targetAssetId = 'a1';
+                        
+                        if (assetNameStr.includes("WILLIAMS") || assetNameStr.includes("395") || assetNameStr.includes("小艇")) {
+                            targetAssetId = 'a3';
+                        } else if (assetNameStr.includes("SEADOO") || assetNameStr.includes("GTR") || assetNameStr.includes("電單車") || assetNameStr.includes("摩托車")) {
+                            targetAssetId = 'a2';
+                        }
+
+                        const rawDate = row[dateIdx];
+                        let formattedDate = "";
+                        if (typeof rawDate === "number") {
+                            const dateObj = XLSX.utils.sheet_to_date(worksheet[XLSX.utils.encode_cell({ r: i, c: dateIdx })]);
+                            formattedDate = dateObj.toISOString().split('T')[0];
+                        } else {
+                            formattedDate = String(rawDate).trim();
+                        }
+
+                        newLogs.push({
+                            id: 'log_xls_' + Date.now() + '_' + i,
+                            date: formattedDate,
+                            assetId: targetAssetId,
+                            route: String(row[routeIdx] || '自主航行與泊位移防').trim(),
+                            engineHours: String(row[hoursIdx] || '0 hrs').trim(),
+                            fuelUsed: String(row[fuelIdx] || '0 L').trim(),
+                            skipper: String(row[skipperIdx] || 'Captain Leo').trim(),
+                            weather: String(row[remarksIdx] || '正常').trim(),
+                            remarks: String(row[remarksIdx] || 'Excel 批次導入紀錄').trim()
+                        });
+                    }
+
+                    if (newLogs.length > 0) {
+                        systemState.logbook = newLogs;
+                        systemState.logbook.sort((a, b) => new Date(b.date) - new Date(a.date));
+                        initApp();
+                        alertMessage(`Excel 匯入成功！已成功覆蓋並更新 ${newLogs.length} 筆航海日誌紀錄。`, "emerald");
+                        autoSyncIfEnabled();
+                    } else {
+                        alertMessage("無效的資料格式，無法完成匯入！", "red");
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alertMessage("解析 Excel 檔案發生錯誤，請確保格式正確！", "red");
+                }
+            };
+            reader.readAsArrayBuffer(file);
+            event.target.value = '';
+        }
+
+        function downloadInventoryTemplate() {
+            const headers = [
+                "物品名稱 (必須與系統內現有名稱相同，或輸入新項目名稱)",
+                "已購數量 (請填寫純數字)",
+                "安全水位 (可不填，僅適用於新項目)",
+                "預估單價 (可不填，僅適用於新項目)",
+                "物資分類 (生活消耗品 / 洗船及清潔用品 / 安全物資)",
+                "補貨渠道/供應商"
+            ];
+            const sampleRows = [
+                ["豪華船用環保易分解廁紙 (48卷/箱)", 10, 10, 180, "生活消耗品", "HKTVmall 採購配送"],
+                ["屈臣氏 4.5L 桶裝純淨蒸餾水", 20, 15, 25, "生活消耗品", "屈臣氏蒸餾水直銷代理"],
+                ["Meguiar's Premium 船用高光澤洗船清潔水", 5, 4, 320, "洗船及清潔用品", "香港仔萬里船具店"]
+            ];
+
+            const worksheetData = [headers, ...sampleRows];
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(worksheetData);
+            
+            const colWidths = [
+                { wch: 45 }, { wch: 22 }, { wch: 22 }, { wch: 22 }, { wch: 30 }, { wch: 30 }
+            ];
+            ws['!cols'] = colWidths;
+
+            XLSX.utils.book_append_sheet(wb, ws, "已購物品入庫登記");
+            XLSX.writeFile(wb, `Yacht_Supplies_Purchase_Template.xlsx`);
+        }
+
+        function handleInventoryExcelUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    const rows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                    if (rows.length <= 1) {
+                        alertMessage("匯入失敗：Excel 檔案中無有效數據！", "red");
+                        return;
+                    }
+
+                    const headers = rows[0].map(h => String(h || '').trim());
+                    let nameIdx = -1, qtyIdx = -1, safetyIdx = -1, priceIdx = -1, catIdx = -1, supplierIdx = -1;
+
+                    headers.forEach((header, index) => {
+                        if (header.includes("名稱") || header.toLowerCase().includes("name")) nameIdx = index;
+                        if (header.includes("數量") || header.includes("購入") || header.toLowerCase().includes("qty") || header.toLowerCase().includes("quantity")) qtyIdx = index;
+                        if (header.includes("水位") || header.toLowerCase().includes("safety")) safetyIdx = index;
+                        if (header.includes("單價") || header.toLowerCase().includes("price")) priceIdx = index;
+                        if (header.includes("分類") || header.toLowerCase().includes("category")) catIdx = index;
+                        if (header.includes("渠道") || header.includes("供應商") || header.toLowerCase().includes("supplier")) supplierIdx = index;
+                    });
+
+                    if (nameIdx === -1) nameIdx = 0;
+                    if (qtyIdx === -1) qtyIdx = 1;
+                    if (safetyIdx === -1) safetyIdx = 2;
+                    if (priceIdx === -1) priceIdx = 3;
+                    if (catIdx === -1) catIdx = 4;
+                    if (supplierIdx === -1) supplierIdx = 5;
+
+                    let updatedCount = 0;
+                    let addedCount = 0;
+
+                    for (let i = 1; i < rows.length; i++) {
+                        const row = rows[i];
+                        if (!row || row.length === 0 || !row[nameIdx]) continue;
+
+                        const itemName = String(row[nameIdx]).trim();
+                        const addQty = parseFloat(row[qtyIdx]) || 0;
+                        if (addQty <= 0) continue;
+
+                        const existingItem = systemState.inventory.find(inv => inv.name.toLowerCase() === itemName.toLowerCase() || inv.name.includes(itemName));
+                        
+                        if (existingItem) {
+                            existingItem.current += addQty;
+                            updatedCount++;
+                        } else {
+                            const newId = 'i_new_' + Date.now() + '_' + i;
+                            const cat = String(row[catIdx] || '生活消耗品').trim();
+                            const safetyVal = parseFloat(row[safetyIdx]) || 5;
+                            const priceVal = parseFloat(row[priceIdx]) || 100;
+                            const supplierVal = String(row[supplierIdx] || '本地船具商採購').trim();
+                            
+                            systemState.inventory.push({
+                                id: newId,
+                                name: itemName,
+                                category: cat,
+                                current: addQty,
+                                safety: safetyVal,
+                                unit: '件',
+                                price: priceVal,
+                                supplier: supplierVal
+                            });
+                            addedCount++;
+                        }
+                    }
+
+                    initApp();
+                    if (updatedCount > 0 || addedCount > 0) {
+                        alertMessage(`成功自 Excel 導入已購物品！更新了 ${updatedCount} 項物資庫存，並新增了 ${addedCount} 個新品項。`, "emerald");
+                        autoSyncIfEnabled();
+                    } else {
+                        alertMessage("Excel 解析成功，但未偵測到任何大於 0 的採購數量項目。", "gold");
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alertMessage("解析已購物品 Excel 失敗，請確認資料結構與登記範本相同！", "red");
+                }
+            };
+            reader.readAsArrayBuffer(file);
+            event.target.value = '';
+        }
+
+        function alertMessage(msg, colorClass = "gold") {
+            let toast = document.getElementById('system-toast-alert');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'system-toast-alert';
+                toast.className = 'fixed top-4 right-4 z-[100] p-4 rounded-xl border shadow-2xl transition-all duration-300 transform translate-y-0 opacity-100 flex items-center gap-3 text-sm';
+                document.body.appendChild(toast);
+            }
+            
+            if (colorClass === "red") {
+                toast.className = 'fixed top-4 right-4 z-[100] p-4 rounded-xl border border-red-500/30 bg-red-950/90 text-red-200 shadow-2xl transition-all duration-300 transform translate-y-0 opacity-100 flex items-center gap-3 text-sm backdrop-blur-md';
+                toast.innerHTML = `<i class="fa-solid fa-circle-xmark text-red-500 text-lg"></i> <span>${msg}</span>`;
+            } else if (colorClass === "emerald") {
+                toast.className = 'fixed top-4 right-4 z-[100] p-4 rounded-xl border border-emerald-500/30 bg-emerald-950/90 text-emerald-200 shadow-2xl transition-all duration-300 transform translate-y-0 opacity-100 flex items-center gap-3 text-sm backdrop-blur-md';
+                toast.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-500 text-lg"></i> <span>${msg}</span>`;
+            } else {
+                toast.className = 'fixed top-4 right-4 z-[100] p-4 rounded-xl border border-gold/30 bg-navy-900/95 text-gold shadow-2xl transition-all duration-300 transform translate-y-0 opacity-100 flex items-center gap-3 text-sm backdrop-blur-md';
+                toast.innerHTML = `<i class="fa-solid fa-circle-exclamation text-gold text-lg"></i> <span>${msg}</span>`;
+            }
+            
+            setTimeout(() => {
+                if (toast) {
+                    toast.className += ' translate-y-[-20px] opacity-0 pointer-events-none';
+                    setTimeout(() => { if(toast) toast.remove(); }, 300);
+                }
+            }, 5000);
+        }
+
+        // Document Ready Initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            // 嘗試載入上次設定的 Google Sheets URL
+            const savedUrl = localStorage.getItem('yacht_g_sheets_url');
+            if (savedUrl) {
+                document.getElementById('g-sheets-url-input').value = savedUrl;
+                setSyncingHeaderStatus("已記錄 Google Sheet");
+            }
+            initApp();
+            initConfirmModal();
+        });
+
+        function initApp() {
+            renderDashboard();
+            renderAssets();
+            renderLogbook();
+            renderMaintenance();
+            renderLicenses();
+            renderFuelLogsAndChart();
+            renderInventory();
+            renderTyphoonSop();
+            populateFormSelects();
+        }
+
+        function initConfirmModal() {
+            document.getElementById('confirm-cancel-btn').addEventListener('click', () => {
+                document.getElementById('confirm-modal').classList.add('hidden');
+                deleteContext = null;
+            });
+
+            document.getElementById('confirm-ok-btn').addEventListener('click', () => {
+                if (deleteContext) {
+                    const { type, id } = deleteContext;
+                    if (type === 'maintenance') {
+                        systemState.maintenance = systemState.maintenance.filter(m => m.id !== id);
+                    } else if (type === 'license') {
+                        systemState.licenses = systemState.licenses.filter(l => l.id !== id);
+                    } else if (type === 'asset') {
+                        systemState.assets = systemState.assets.filter(a => a.id !== id);
+                    } else if (type === 'logbook') {
+                        systemState.logbook = systemState.logbook.filter(l => l.id !== id);
+                    } else if (type === 'fuel') {
+                        systemState.fuelLogs = systemState.fuelLogs.filter(f => f.id !== id);
+                    } else if (type === 'inventory') {
+                        systemState.inventory = systemState.inventory.filter(i => i.id !== id);
+                    } else if (type === 'typhoon-step') {
+                        systemState.typhoonSop = systemState.typhoonSop.filter(s => s.id !== id);
+                    } else if (type === 'typhoon-contact') {
+                        systemState.emergencyContacts = systemState.emergencyContacts.filter(c => c.id !== id);
+                    }
+                    initApp();
+                    autoSyncIfEnabled();
+                }
+                document.getElementById('confirm-modal').classList.add('hidden');
+                deleteContext = null;
+            });
+        }
+
+        function switchTab(tabId) {
+            const navItems = document.querySelectorAll('#sidebar-nav button');
+            navItems.forEach(item => {
+                if (item.id === `nav-${tabId}`) {
+                    item.className = "w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 bg-gold/10 text-gold border-l-4 border-gold";
+                } else {
+                    item.className = "w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800/50 hover:text-slate-100 transition-all duration-200 border-l-4 border-transparent";
+                }
+            });
+
+            const sections = ['dashboard', 'assets', 'logbook', 'maintenance', 'licenses', 'fuel', 'inventory', 'typhoon'];
+            sections.forEach(sec => {
+                const el = document.getElementById(`tab-${sec}`);
+                if (sec === tabId) {
+                    el.classList.remove('hidden');
+                    el.classList.add('block');
+                } else {
+                    el.classList.remove('block');
+                    el.classList.add('hidden');
+                }
+            });
+
+            const badgeMap = {
+                dashboard: 'Overview / 數據綜合總覽',
+                assets: 'Assets / 船隊與設備規格',
+                logbook: 'Logbook / 航海與出航紀錄',
+                maintenance: 'Maintenance / 維修保養與預算',
+                licenses: 'Licensing / 保險與牌照提示',
+                fuel: 'Fuel Trend / 油價記錄與趨勢',
+                inventory: 'Inventory / 遊艇生活與洗船物資',
+                typhoon: 'Typhoon SOP / 颱風應急 SOP'
+            };
+            const parts = badgeMap[tabId].split(' / ');
+            document.getElementById('current-section-badge').textContent = parts[0];
+            document.getElementById('current-section-title').textContent = parts[1];
+
+            if (tabId === 'fuel') {
+                setTimeout(renderFuelLogsAndChart, 100);
+            }
+        }
+
+        function getDaysDifference(dateString) {
+            const current = new Date(systemState.currentDate);
+            const target = new Date(dateString);
+            const diffTime = target - current;
+            return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        }
+
+        function getAssetName(assetId) {
+            const asset = systemState.assets.find(a => a.id === assetId);
+            return asset ? asset.name : '未知設備';
+        }
+
+        // Modals management
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+            if (modalId === 'adjust-inventory-modal' && !systemState.editMode) {
+                const firstId = systemState.inventory[0]?.id;
+                loadCurrentStock(firstId);
+            }
+        }
+
+        function openAddModal(modalId, title, btnText) {
+            systemState.editMode = false;
+            systemState.editId = null;
+
+            const h3 = document.querySelector(`#${modalId} h3`);
+            const btn = document.querySelector(`#${modalId} button[type="submit"]`);
+            if (h3) h3.textContent = title;
+            if (btn) btn.textContent = btnText;
+
+            const form = document.querySelector(`#${modalId} form`);
+            if (form) form.reset();
+
+            openModal(modalId);
+        }
+
+        function openEditModal(type, id) {
+            systemState.editMode = true;
+            systemState.editId = id;
+
+            if (type === 'asset') {
+                const item = systemState.assets.find(a => a.id === id);
+                if (item) {
+                    document.getElementById('asset-name').value = item.name;
+                    document.getElementById('asset-type').value = item.type;
+                    document.getElementById('asset-spec').value = item.spec;
+                    
+                    document.querySelector('#add-asset-modal h3').textContent = '編輯船隻/設備資產';
+                    document.querySelector('#add-asset-modal button[type="submit"]').textContent = '更新數據';
+                    openModal('add-asset-modal');
+                }
+            } else if (type === 'logbook') {
+                const item = systemState.logbook.find(l => l.id === id);
+                if (item) {
+                    document.getElementById('log-asset-select').value = item.assetId;
+                    document.getElementById('log-date').value = item.date;
+                    document.getElementById('log-route').value = item.route;
+                    document.getElementById('log-hours').value = item.engineHours;
+                    document.getElementById('log-fuel').value = item.fuelUsed;
+                    document.getElementById('log-skipper').value = item.skipper;
+                    document.getElementById('log-weather').value = item.weather;
+                    document.getElementById('log-remarks').value = item.remarks;
+
+                    document.querySelector('#add-logbook-modal h3').textContent = '編輯航海出航紀錄';
+                    document.querySelector('#add-logbook-modal button[type="submit"]').textContent = '更新數據';
+                    openModal('add-logbook-modal');
+                }
+            } else if (type === 'maintenance') {
+                const item = systemState.maintenance.find(m => m.id === id);
+                if (item) {
+                    document.getElementById('maint-asset-select').value = item.assetId;
+                    document.getElementById('maint-category').value = item.category;
+                    document.getElementById('maint-item').value = item.item;
+                    document.getElementById('maint-budget').value = item.budget;
+                    document.getElementById('maint-actual').value = item.actual;
+
+                    document.querySelector('#add-maintenance-modal h3').textContent = '編輯保養維修預算';
+                    document.querySelector('#add-maintenance-modal button[type="submit"]').textContent = '更新數據';
+                    openModal('add-maintenance-modal');
+                }
+            } else if (type === 'licenses') {
+                const item = systemState.licenses.find(l => l.id === id);
+                if (item) {
+                    document.getElementById('license-asset-select').value = item.assetId;
+                    document.getElementById('license-type').value = item.type;
+                    document.getElementById('license-price').value = item.price;
+                    document.getElementById('license-expiry').value = item.expiry;
+
+                    document.querySelector('#add-license-modal h3').textContent = '編輯保險及牌照效期';
+                    document.querySelector('#add-license-modal button[type="submit"]').textContent = '更新數據';
+                    openModal('add-license-modal');
+                }
+            } else if (type === 'fuel') {
+                const item = systemState.fuelLogs.find(f => f.id === id);
+                if (item) {
+                    document.getElementById('fuel-asset-select').value = item.assetId;
+                    document.getElementById('fuel-date').value = item.date;
+                    document.getElementById('fuel-price').value = item.pricePerLitre;
+                    document.getElementById('fuel-amount').value = item.amount;
+
+                    document.querySelector('#add-fuel-modal h3').textContent = '編輯加油與燃料費用';
+                    document.querySelector('#add-fuel-modal button[type="submit"]').textContent = '更新數據';
+                    openModal('add-fuel-modal');
+                }
+            } else if (type === 'inventory') {
+                const item = systemState.inventory.find(i => i.id === id);
+                if (item) {
+                    document.getElementById('inventory-item-select').value = item.id;
+                    document.getElementById('inventory-current').value = item.current;
+                    document.getElementById('inventory-safety').value = item.safety;
+
+                    document.querySelector('#adjust-inventory-modal h3').textContent = '編輯常備庫存存量';
+                    document.querySelector('#adjust-inventory-modal button[type="submit"]').textContent = '更新數據';
+                    openModal('adjust-inventory-modal');
+                }
+            } else if (type === 'typhoon-step') {
+                const item = systemState.typhoonSop.find(s => s.id === id);
+                if (item) {
+                    document.getElementById('typhoon-category').value = item.category;
+                    document.getElementById('typhoon-text').value = item.text;
+
+                    document.querySelector('#add-typhoon-step-modal h3').textContent = '編輯防風應急部署步驟';
+                    document.querySelector('#add-typhoon-step-modal button[type="submit"]').textContent = '更新步驟';
+                    openModal('add-typhoon-step-modal');
+                }
+            } else if (type === 'typhoon-contact') {
+                const item = systemState.emergencyContacts.find(c => c.id === id);
+                if (item) {
+                    document.getElementById('contact-role').value = item.role;
+                    document.getElementById('contact-phone').value = item.phone;
+
+                    document.querySelector('#add-typhoon-contact-modal h3').textContent = '編輯緊急防風聯絡人';
+                    document.querySelector('#add-typhoon-contact-modal button[type="submit"]').textContent = '更新聯絡人';
+                    openModal('add-typhoon-contact-modal');
+                }
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+            systemState.editMode = false;
+            systemState.editId = null;
+        }
+
+        function populateFormSelects() {
+            const logAssetSel = document.getElementById('log-asset-select');
+            const maintAssetSel = document.getElementById('maint-asset-select');
+            const licenseAssetSel = document.getElementById('license-asset-select');
+            const fuelAssetSel = document.getElementById('fuel-asset-select');
+            const invItemSel = document.getElementById('inventory-item-select');
+
+            let assetOpts = '';
+            systemState.assets.forEach(a => {
+                assetOpts += `<option value="${a.id}">${a.name} (${a.type})</option>`;
+            });
+            if (logAssetSel) logAssetSel.innerHTML = assetOpts;
+            maintAssetSel.innerHTML = assetOpts;
+            licenseAssetSel.innerHTML = assetOpts;
+            fuelAssetSel.innerHTML = assetOpts;
+
+            let invOpts = '';
+            systemState.inventory.forEach(i => {
+                invOpts += `<option value="${i.id}">${i.name}</option>`;
+            });
+            invItemSel.innerHTML = invOpts;
+        }
+
+        function loadCurrentStock(itemId) {
+            const item = systemState.inventory.find(i => i.id === itemId);
+            if (item) {
+                document.getElementById('inventory-current').value = item.current;
+                document.getElementById('inventory-safety').value = item.safety;
+            }
+        }
+
+        function handleFormSubmit(event, type) {
+            event.preventDefault();
+            if (type === 'asset') {
+                const name = document.getElementById('asset-name').value;
+                const assetType = document.getElementById('asset-type').value;
+                const spec = document.getElementById('asset-spec').value;
+                
+                const iconMap = {
+                    '遊艇': 'fa-ship',
+                    '水上摩托車': 'fa-person-skiing-water',
+                    '附屬小艇': 'fa-anchor'
+                };
+
+                if (systemState.editMode) {
+                    const item = systemState.assets.find(a => a.id === systemState.editId);
+                    if (item) {
+                        item.name = name;
+                        item.type = assetType;
+                        item.spec = spec;
+                        item.icon = iconMap[assetType] || 'fa-ship';
+                    }
+                } else {
+                    const id = 'asset_' + Date.now();
+                    systemState.assets.push({
+                        id, name, type: assetType, spec, icon: iconMap[assetType] || 'fa-ship'
+                    });
+                }
+                closeModal('add-asset-modal');
+            } else if (type === 'logbook') {
+                const assetId = document.getElementById('log-asset-select').value;
+                const date = document.getElementById('log-date').value;
+                const route = document.getElementById('log-route').value;
+                const engineHours = document.getElementById('log-hours').value;
+                const fuelUsed = document.getElementById('log-fuel').value;
+                const skipper = document.getElementById('log-skipper').value;
+                const weather = document.getElementById('log-weather').value;
+                const remarks = document.getElementById('log-remarks').value;
+
+                if (systemState.editMode) {
+                    const item = systemState.logbook.find(l => l.id === systemState.editId);
+                    if (item) {
+                        item.assetId = assetId;
+                        item.date = date;
+                        item.route = route;
+                        item.engineHours = engineHours;
+                        item.fuelUsed = fuelUsed;
+                        item.skipper = skipper;
+                        item.weather = weather;
+                        item.remarks = remarks;
+                    }
+                } else {
+                    const id = 'log_' + Date.now();
+                    systemState.logbook.push({
+                        id, date, assetId, route, engineHours, fuelUsed, skipper, weather, remarks
+                    });
+                }
+                systemState.logbook.sort((a, b) => new Date(b.date) - new Date(a.date));
+                closeModal('add-logbook-modal');
+            } else if (type === 'maintenance') {
+                const assetId = document.getElementById('maint-asset-select').value;
+                const category = document.getElementById('maint-category').value;
+                const itemVal = document.getElementById('maint-item').value;
+                const budget = parseFloat(document.getElementById('maint-budget').value);
+                const actual = parseFloat(document.getElementById('maint-actual').value);
+
+                if (systemState.editMode) {
+                    const item = systemState.maintenance.find(m => m.id === systemState.editId);
+                    if (item) {
+                        item.assetId = assetId;
+                        item.category = category;
+                        item.item = itemVal;
+                        item.budget = budget;
+                        item.actual = actual;
+                    }
+                } else {
+                    const id = 'maint_' + Date.now();
+                    systemState.maintenance.push({ id, assetId, category, item: itemVal, budget, actual });
+                }
+                closeModal('add-maintenance-modal');
+            } else if (type === 'licenses') {
+                const assetId = document.getElementById('license-asset-select').value;
+                const typeName = document.getElementById('license-type').value;
+                const price = parseFloat(document.getElementById('license-price').value);
+                const expiry = document.getElementById('license-expiry').value;
+
+                if (systemState.editMode) {
+                    const item = systemState.licenses.find(l => l.id === systemState.editId);
+                    if (item) {
+                        item.assetId = assetId;
+                        item.type = typeName;
+                        item.price = price;
+                        item.expiry = expiry;
+                    }
+                } else {
+                    const id = 'lic_' + Date.now();
+                    systemState.licenses.push({ id, assetId, type: typeName, expiry, price, docRef: '自訂上傳證明文件.pdf' });
+                }
+                closeModal('add-license-modal');
+            } else if (type === 'fuel') {
+                const assetId = document.getElementById('fuel-asset-select').value;
+                const date = document.getElementById('fuel-date').value;
+                const pricePerLitre = parseFloat(document.getElementById('fuel-price').value);
+                const amount = parseFloat(document.getElementById('fuel-amount').value);
+
+                if (systemState.editMode) {
+                    const item = systemState.fuelLogs.find(f => f.id === systemState.editId);
+                    if (item) {
+                        item.assetId = assetId;
+                        item.date = date;
+                        item.pricePerLitre = pricePerLitre;
+                        item.amount = amount;
+                    }
+                } else {
+                    const id = 'fuel_' + Date.now();
+                    systemState.fuelLogs.push({ id, date, assetId, pricePerLitre, amount });
+                }
+                systemState.fuelLogs.sort((a, b) => new Date(a.date) - new Date(b.date));
+                closeModal('add-fuel-modal');
+            } else if (type === 'inventory') {
+                const id = document.getElementById('inventory-item-select').value;
+                const current = parseFloat(document.getElementById('inventory-current').value);
+                const safety = parseFloat(document.getElementById('inventory-safety').value);
+
+                const item = systemState.inventory.find(i => i.id === id);
+                if (item) {
+                    item.current = current;
+                    item.safety = safety;
+                }
+                closeModal('adjust-inventory-modal');
+            } else if (type === 'typhoon-step') {
+                const category = document.getElementById('typhoon-category').value;
+                const text = document.getElementById('typhoon-text').value;
+
+                if (systemState.editMode) {
+                    const item = systemState.typhoonSop.find(s => s.id === systemState.editId);
+                    if (item) {
+                        item.category = category;
+                        item.text = text;
+                    }
+                } else {
+                    const id = 'ts_' + Date.now();
+                    systemState.typhoonSop.push({ id, category, text, checked: false });
+                }
+                closeModal('add-typhoon-step-modal');
+            } else if (type === 'typhoon-contact') {
+                const role = document.getElementById('contact-role').value;
+                const phone = document.getElementById('contact-phone').value;
+
+                if (systemState.editMode) {
+                    const item = systemState.emergencyContacts.find(c => c.id === systemState.editId);
+                    if (item) {
+                        item.role = role;
+                        item.phone = phone;
+                    }
+                } else {
+                    const id = 'ec_' + Date.now();
+                    systemState.emergencyContacts.push({ id, role, phone });
+                }
+                closeModal('add-typhoon-contact-modal');
+            }
+
+            systemState.editMode = false;
+            systemState.editId = null;
+            initApp();
+            autoSyncIfEnabled();
+        }
+
+        function deleteItem(type, id) {
+            deleteContext = { type, id };
+            document.getElementById('confirm-modal').classList.remove('hidden');
+        }
+
+        function toggleTyphoonStep(stepId) {
+            const step = systemState.typhoonSop.find(s => s.id === stepId);
+            if (step) {
+                step.checked = !step.checked;
+                renderTyphoonSop();
+                autoSyncIfEnabled();
+            }
+        }
+
+        // =========================================================
+        // RENDER ENGINES (DASHBOARD & TAB CONTENTS)
+        // =========================================================
+        function renderDashboard() {
+            let criticalLicensesCount = 0;
+            let licenseAlertsHtml = '';
+
+            systemState.licenses.forEach(l => {
+                const daysLeft = getDaysDifference(l.expiry);
+                let badgeClass = 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400';
+                let alertText = '正常';
+                
+                if (daysLeft <= 60) {
+                    criticalLicensesCount++;
+                    badgeClass = 'bg-red-500/10 border-red-500/30 text-red-400 animate-pulse';
+                    alertText = '極緊急 / 建議立刻續辦';
+                } else if (daysLeft <= 120) {
+                    badgeClass = 'bg-amber-500/10 border-amber-500/30 text-amber-400';
+                    alertText = '即將到期';
+                }
+
+                if (daysLeft <= 120) {
+                    licenseAlertsHtml += `
+                        <div class="flex flex-col md:flex-row md:items-center justify-between p-4 bg-navy-950/60 rounded-lg border border-gold/10">
+                            <div class="flex items-center space-x-3">
+                                <span class="p-2 ${daysLeft <= 60 ? 'bg-red-500/10 text-red-400' : 'bg-amber-500/10 text-amber-400'} rounded-lg">
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                </span>
+                                <div>
+                                    <p class="text-xs text-slate-400">${getAssetName(l.assetId)}</p>
+                                    <p class="text-sm font-semibold text-slate-100">${l.type}</p>
+                                    <p class="text-[10px] text-slate-500">關聯原檔: ${l.docRef}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-4 mt-3 md:mt-0">
+                                <span class="text-xs px-2.5 py-1 rounded-full font-bold border ${badgeClass}">${alertText} (剩餘 ${daysLeft} 天)</span>
+                                <span class="text-xs text-slate-500 font-mono">到期日: ${l.expiry}</span>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            if (!licenseAlertsHtml) {
+                licenseAlertsHtml = `
+                    <div class="text-center p-6 bg-navy-950/20 rounded-lg border border-gold/5">
+                        <i class="fa-solid fa-circle-check text-emerald-500 text-xl mb-2"></i>
+                        <p class="text-xs text-slate-400">目前所有互保及運作牌照效期均在安全區間 (&gt;120天)</p>
+                    </div>
+                `;
+            }
+
+            document.getElementById('dashboard-license-alerts').innerHTML = licenseAlertsHtml;
+
+            let lowStockCount = 0;
+            systemState.inventory.forEach(i => {
+                if (i.current < i.safety) lowStockCount++;
+            });
+            document.getElementById('stat-low-stock').textContent = lowStockCount + ' 項';
+            document.getElementById('stat-total-logs').textContent = `${systemState.logbook.length} 筆紀錄`;
+            document.getElementById('stat-total-assets').textContent = `${systemState.assets.length} 艘艇`;
+            
+            let totalSpending = 0;
+            systemState.maintenance.forEach(m => {
+                totalSpending += m.actual;
+            });
+            document.getElementById('stat-total-spending').textContent = 'HK$ ' + totalSpending.toLocaleString();
+
+            let dashboardAssetsHtml = '';
+            systemState.assets.forEach(a => {
+                dashboardAssetsHtml += `
+                    <div class="p-4 bg-navy-950/40 rounded-xl border border-gold/10 flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2 bg-gold/10 text-gold rounded-lg"><i class="fa-solid ${a.icon}"></i></div>
+                            <div>
+                                <p class="text-xs text-slate-400">${a.type}</p>
+                                <p class="text-sm font-semibold text-slate-100">${a.name.split(' (')[0]}</p>
+                            </div>
+                        </div>
+                        <span class="text-[11px] bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-2 py-0.5 rounded-full">正常</span>
+                    </div>
+                `;
+            });
+            document.getElementById('dashboard-assets-grid').innerHTML = dashboardAssetsHtml;
+
+            let checklistHtml = '';
+            let lowStockItems = systemState.inventory.filter(i => i.current < i.safety);
+            
+            if (lowStockItems.length > 0) {
+                lowStockItems.forEach(item => {
+                    checklistHtml += `
+                        <label class="flex items-center justify-between p-2 bg-navy-950/50 hover:bg-navy-950/80 border border-gold/5 hover:border-gold/15 rounded-lg text-xs cursor-pointer transition-all">
+                            <span class="flex items-center space-x-2 text-slate-300">
+                                <input type="checkbox" onchange="restockItem('${item.id}')" class="accent-gold rounded cursor-pointer w-4 h-4 mr-1">
+                                <span class="font-medium">${item.name}</span>
+                            </span>
+                            <span class="text-[10px] text-amber-400 font-mono bg-amber-500/10 px-2 py-0.5 rounded">缺 ${item.safety - item.current} ${item.unit}</span>
+                        </label>
+                    `;
+                });
+            } else {
+                checklistHtml = `
+                    <div class="text-center p-4 bg-navy-950/20 rounded-lg border border-gold/5">
+                        <p class="text-xs text-slate-500 flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-circle-check text-emerald-500"></i> 所有常備物資皆在安全水位
+                        </p>
+                    </div>
+                `;
+            }
+            document.getElementById('dashboard-stock-checklist').innerHTML = checklistHtml;
+        }
+
+        function restockItem(itemId) {
+            const item = systemState.inventory.find(i => i.id === itemId);
+            if (item) {
+                item.current = item.safety * 2;
+                alertMessage(`已成功補貨：${item.name}！現有庫存已更新為 ${item.current} ${item.unit}。`, "emerald");
+                initApp();
+                autoSyncIfEnabled();
+            }
+        }
+
+        function renderAssets() {
+            let assetsHtml = '';
+            systemState.assets.forEach(a => {
+                assetsHtml += `
+                    <div class="bg-navy-900/60 border border-gold/10 rounded-xl p-6 shadow-lg flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="text-[10px] bg-gold/10 border border-gold/20 text-gold px-2.5 py-1 rounded font-bold uppercase tracking-wider">${a.type}</span>
+                                <div class="flex space-x-2 items-center">
+                                    <span class="text-xs bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-2.5 py-0.5 rounded-full font-bold">已簽約/列管</span>
+                                    <button onclick="openEditModal('asset', '${a.id}')" class="text-slate-400 hover:text-gold text-xs transition-colors"><i class="fa-solid fa-pencil"></i></button>
+                                    <button onclick="deleteItem('asset', '${a.id}')" class="text-slate-500 hover:text-red-400 text-xs transition-colors"><i class="fa-solid fa-trash"></i></button>
+                                </div>
+                            </div>
+                            <h4 class="text-md font-bold font-serif text-slate-100 flex items-center gap-2 mb-2">
+                                <i class="fa-solid ${a.icon} text-gold"></i> ${a.name}
+                            </h4>
+                            <p class="text-xs text-slate-400 leading-relaxed mb-4">${a.spec}</p>
+                        </div>
+                        <div class="border-t border-gold/10 pt-4 mt-2">
+                            <span class="text-[10px] text-slate-500 block">對應牌照保險監測:</span>
+                            <span class="text-xs text-slate-300 font-semibold mt-1 inline-block">證照與牌照效期已啟動智能自動連動</span>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('assets-management-grid').innerHTML = assetsHtml;
+        }
+
+        function renderLogbook() {
+            let tbodyHtml = '';
+            systemState.logbook.forEach(log => {
+                tbodyHtml += `
+                    <tr class="hover:bg-navy-900/40 transition-colors text-xs text-slate-300">
+                        <td class="py-4 px-6 font-mono font-bold">${log.date}</td>
+                        <td class="py-4 px-6 text-slate-100 font-bold">${getAssetName(log.assetId).split(' (')[0]}</td>
+                        <td class="py-4 px-6 text-sky-400 font-medium">${log.route}</td>
+                        <td class="py-4 px-6 font-mono text-slate-100">${log.engineHours}</td>
+                        <td class="py-4 px-6 font-mono">${log.fuelUsed}</td>
+                        <td class="py-4 px-6 text-slate-400">${log.skipper}</td>
+                        <td class="py-4 px-6 max-w-xs truncate" title="${log.remarks}">${log.weather} - ${log.remarks}</td>
+                        <td class="py-4 px-6 text-right">
+                            <div class="flex justify-end space-x-2">
+                                <button onclick="openEditModal('logbook', '${log.id}')" class="text-slate-400 hover:text-gold text-xs transition-colors"><i class="fa-solid fa-pencil"></i></button>
+                                <button onclick="deleteItem('logbook', '${log.id}')" class="text-slate-500 hover:text-red-400 text-xs transition-colors"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            document.getElementById('logbook-table-body').innerHTML = tbodyHtml;
+        }
+
+        function renderMaintenance() {
+            let totalBudget = 0;
+            let totalActual = 0;
+            let tableBodyHtml = '';
+
+            systemState.maintenance.forEach(m => {
+                totalBudget += m.budget;
+                totalActual += m.actual;
+
+                const variance = m.actual - m.budget;
+                let varianceHtml = '';
+                if (variance > 0) {
+                    varianceHtml = `<span class="text-red-400 font-bold font-mono">+$${variance.toLocaleString()} (超支)</span>`;
+                } else if (variance < 0) {
+                    varianceHtml = `<span class="text-emerald-400 font-bold font-mono">-$${Math.abs(variance).toLocaleString()} (省下)</span>`;
+                } else {
+                    varianceHtml = `<span class="text-slate-400 font-mono">符合預算</span>`;
+                }
+
+                tableBodyHtml += `
+                    <tr class="hover:bg-navy-900/40 transition-colors">
+                        <td class="py-4 px-6 font-bold text-slate-200 text-xs">${getAssetName(m.assetId).split(' (')[0]}</td>
+                        <td class="py-4 px-6 text-slate-400 text-xs">${m.category}</td>
+                        <td class="py-4 px-6 text-slate-300 text-xs">${m.item}</td>
+                        <td class="py-4 px-6 font-mono text-xs">HK$ ${m.budget.toLocaleString()}</td>
+                        <td class="py-4 px-6 font-mono text-xs">HK$ ${m.actual.toLocaleString()}</td>
+                        <td class="py-4 px-6 text-xs">${varianceHtml}</td>
+                        <td class="py-4 px-6 text-right">
+                            <div class="flex justify-end space-x-2">
+                                <button onclick="openEditModal('maintenance', '${m.id}')" class="text-slate-400 hover:text-gold text-xs transition-colors"><i class="fa-solid fa-pencil"></i></button>
+                                <button onclick="deleteItem('maintenance', '${m.id}')" class="text-slate-500 hover:text-red-400 text-xs transition-colors"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById('maintenance-table-body').innerHTML = tableBodyHtml;
+            document.getElementById('maint-total-budget').textContent = 'HK$ ' + totalBudget.toLocaleString();
+            document.getElementById('maint-total-actual').textContent = 'HK$ ' + totalActual.toLocaleString();
+
+            const netVariance = totalActual - totalBudget;
+            const varianceCard = document.getElementById('maint-variance-card');
+            if (netVariance > 0) {
+                varianceCard.innerHTML = `
+                    <div>
+                        <span class="text-xs text-red-400">當期超出淨偏差</span>
+                        <h4 class="text-xl font-bold font-serif text-red-400 mt-1">HK$ +${netVariance.toLocaleString()}</h4>
+                    </div>
+                    <i class="fa-solid fa-triangle-exclamation text-2xl text-red-500/60"></i>
+                `;
+                varianceCard.className = "bg-red-950/20 border border-red-500/20 p-5 rounded-lg flex justify-between items-center";
+            } else {
+                varianceCard.innerHTML = `
+                    <div>
+                        <span class="text-xs text-emerald-400">當期淨節省偏差</span>
+                        <h4 class="text-xl font-bold font-serif text-emerald-400 mt-1">HK$ ${netVariance.toLocaleString()}</h4>
+                    </div>
+                    <i class="fa-solid fa-circle-check text-2xl text-emerald-500/60"></i>
+                `;
+                varianceCard.className = "bg-emerald-950/20 border border-emerald-500/20 p-5 rounded-lg flex justify-between items-center";
+            }
+        }
+
+        function renderLicenses() {
+            let tbodyHtml = '';
+            systemState.licenses.forEach(l => {
+                const daysLeft = getDaysDifference(l.expiry);
+                let badgeHtml = '';
+                
+                if (daysLeft <= 60) {
+                    badgeHtml = `<span class="bg-red-500/10 border border-red-500/30 text-red-400 px-2.5 py-1 rounded text-xs font-bold animate-pulse"><i class="fa-solid fa-triangle-exclamation"></i> 急需更新/交規費</span>`;
+                } else if (daysLeft <= 120) {
+                    badgeHtml = `<span class="bg-amber-500/10 border border-amber-500/30 text-amber-400 px-2.5 py-1 rounded text-xs font-bold"><i class="fa-solid fa-clock"></i> 建議準備續期</span>`;
+                } else {
+                    badgeHtml = `<span class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-2.5 py-1 rounded text-xs font-bold"><i class="fa-solid fa-circle-check"></i> 正常生效</span>`;
+                }
+
+                tbodyHtml += `
+                    <tr class="hover:bg-navy-900/40 transition-colors">
+                        <td class="py-4 px-6 font-bold text-slate-200 text-xs">
+                            ${getAssetName(l.assetId).split(' (')[0]}
+                        </td>
+                        <td class="py-4 px-6 text-slate-300 text-xs">
+                            <div class="font-bold text-slate-100">${l.type}</div>
+                            <div class="text-[11px] text-gold/80 mt-1 font-mono"><i class="fa-solid fa-file-pdf"></i> 原檔: ${l.docRef}</div>
+                        </td>
+                        <td class="py-4 px-6 font-mono text-slate-400 text-xs">HK$ ${l.price.toLocaleString()}</td>
+                        <td class="py-4 px-6 font-mono text-slate-400 text-xs">${l.expiry}</td>
+                        <td class="py-4 px-6 font-mono font-bold text-slate-100 text-xs">${daysLeft} 天</td>
+                        <td class="py-4 px-6 text-xs">${badgeHtml}</td>
+                        <td class="py-4 px-6 text-right">
+                            <div class="flex justify-end space-x-2">
+                                <button onclick="openEditModal('licenses', '${l.id}')" class="text-slate-400 hover:text-gold text-xs transition-colors"><i class="fa-solid fa-pencil"></i></button>
+                                <button onclick="deleteItem('license', '${l.id}')" class="text-slate-500 hover:text-red-400 text-xs transition-colors"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            document.getElementById('licenses-table-body').innerHTML = tbodyHtml;
+        }
+
+        function renderFuelLogsAndChart() {
+            let logsHtml = '';
+            const chartLabels = [];
+            const chartData = [];
+
+            systemState.fuelLogs.forEach(log => {
+                logsHtml += `
+                    <div class="flex items-center justify-between p-3 bg-navy-950/40 rounded-lg border border-gold/10 text-xs">
+                        <div>
+                            <p class="text-slate-400">${log.date}</p>
+                            <p class="font-bold text-slate-200">${log.amount} L @ ${getAssetName(log.assetId).split(' (')[0]}</p>
+                        </div>
+                        <div class="text-right flex items-center space-x-3">
+                            <div>
+                                <p class="text-gold font-bold font-mono">HK$ ${log.pricePerLitre}/L</p>
+                                <p class="text-[10px] text-slate-500 font-mono">共 HK$ ${(log.amount * log.pricePerLitre).toLocaleString()}</p>
+                            </div>
+                            <div class="flex flex-col space-y-1">
+                                <button onclick="openEditModal('fuel', '${log.id}')" class="text-slate-400 hover:text-gold text-[10px] transition-colors"><i class="fa-solid fa-pencil"></i></button>
+                                <button onclick="deleteItem('fuel', '${log.id}')" class="text-slate-500 hover:text-red-400 text-[10px] transition-colors"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                chartLabels.push(log.date);
+                chartData.push(log.pricePerLitre);
+            });
+
+            document.getElementById('fuel-logs-list').innerHTML = logsHtml;
+
+            const ctx = document.getElementById('fuelTrendChart').getContext('2d');
+            if (fuelChartInstance) {
+                fuelChartInstance.destroy();
+            }
+
+            fuelChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        label: '船油零售價格 (HKD / L)',
+                        data: chartData,
+                        borderColor: '#e2c275',
+                        backgroundColor: 'rgba(226, 194, 117, 0.08)',
+                        fill: true,
+                        tension: 0.3,
+                        borderWidth: 3,
+                        pointBackgroundColor: '#e2c275',
+                        pointBorderColor: '#0b1329',
+                        pointHoverRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: 'rgba(255, 255, 255, 0.03)' },
+                            ticks: { color: '#94a3b8', font: { size: 10 } }
+                        },
+                        y: {
+                            grid: { color: 'rgba(255, 255, 255, 0.03)' },
+                            ticks: { color: '#94a3b8', font: { size: 10 } }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderInventory() {
+            let tableHtml = '';
+            let shoppingHtml = '';
+            let totalShoppingBudget = 0;
+
+            systemState.inventory.forEach(item => {
+                const isLowStock = item.current < item.safety;
+                let statusHtml = '';
+
+                if (isLowStock) {
+                    statusHtml = `<span class="text-amber-400 font-bold bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 rounded">需補貨</span>`;
+                    
+                    const purchaseQty = (item.safety * 2) - item.current; 
+                    const subtotal = purchaseQty * item.price;
+                    totalShoppingBudget += subtotal;
+
+                    shoppingHtml += `
+                        <div class="p-3 bg-navy-950/60 rounded-lg border border-gold/10 text-xs">
+                            <div class="flex justify-between font-bold text-slate-100">
+                                <span>${item.name}</span>
+                                <span class="text-gold font-mono">建議採購 +${purchaseQty} ${item.unit}</span>
+                            </div>
+                            <div class="flex justify-between text-[11px] text-slate-400 mt-1">
+                                <span>渠道: ${item.supplier}</span>
+                                <span class="font-mono">估價: HK$ ${subtotal.toLocaleString()}</span>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    statusHtml = `<span class="text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded">安全</span>`;
+                }
+
+                tableHtml += `
+                    <tr class="hover:bg-navy-900/40 transition-colors">
+                        <td class="py-3 px-4 font-bold text-slate-200">${item.name}</td>
+                        <td class="py-3 px-4 text-slate-400">${item.category}</td>
+                        <td class="py-3 px-4 text-center font-bold font-mono text-slate-100">${item.current} ${item.unit}</td>
+                        <td class="py-3 px-4 text-center font-mono text-slate-400">${item.safety} ${item.unit}</td>
+                        <td class="py-3 px-4 text-slate-400 text-xs">${item.supplier}</td>
+                        <td class="py-3 px-4 text-center">${statusHtml}</td>
+                        <td class="py-3 px-4 text-right">
+                            <button onclick="openEditModal('inventory', '${item.id}')" class="text-slate-400 hover:text-gold text-xs transition-colors"><i class="fa-solid fa-pencil"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById('inventory-table-body').innerHTML = tableHtml;
+            document.getElementById('auto-shopping-list').innerHTML = shoppingHtml || `
+                <div class="text-center py-6 text-slate-400">
+                    <i class="fa-solid fa-circle-check text-emerald-500 text-xl mb-2"></i>
+                    <p class="text-xs">所有安全物資水位充足，暫無急需採購項目。</p>
+                </div>
+            `;
+            document.getElementById('shopping-total-price').textContent = 'HK$ ' + totalShoppingBudget.toLocaleString();
+        }
+
+        function renderTyphoonSop() {
+            const t1t3Container = document.getElementById('typhoon-t1t3-list');
+            const t8plusContainer = document.getElementById('typhoon-t8plus-list');
+            const contactsContainer = document.getElementById('typhoon-contacts-list');
+
+            let t1t3Html = '';
+            let t8plusHtml = '';
+
+            systemState.typhoonSop.forEach(step => {
+                const stepHtml = `
+                    <div class="flex items-start justify-between p-2.5 bg-navy-950/40 hover:bg-navy-950/80 border border-gold/5 rounded-lg text-sm transition-all gap-4">
+                        <label class="flex items-start gap-3 cursor-pointer text-slate-300 hover:text-slate-100 flex-1 leading-relaxed">
+                            <input type="checkbox" onchange="toggleTyphoonStep('${step.id}')" class="mt-1 accent-gold rounded cursor-pointer w-4 h-4" ${step.checked ? 'checked' : ''}>
+                            <span class="${step.checked ? 'line-through text-slate-500' : ''}">${step.text}</span>
+                        </label>
+                        <div class="flex items-center space-x-2 shrink-0 pt-0.5">
+                            <button onclick="openEditModal('typhoon-step', '${step.id}')" class="text-slate-400 hover:text-gold text-xs transition-colors"><i class="fa-solid fa-pencil"></i></button>
+                            <button onclick="deleteItem('typhoon-step', '${step.id}')" class="text-slate-500 hover:text-red-400 text-xs transition-colors"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+                if (step.category === 't1t3') {
+                    t1t3Html += stepHtml;
+                } else {
+                    t8plusHtml += stepHtml;
+                }
+            });
+
+            t1t3Container.innerHTML = t1t3Html || `<p class="text-xs text-slate-500 italic pl-4">暫無 1號/3號信號 應急步驟</p>`;
+            t8plusContainer.innerHTML = t8plusHtml || `<p class="text-xs text-slate-500 italic pl-4">暫無 8號或以上信號 應急步驟</p>`;
+
+            let contactsHtml = '';
+            systemState.emergencyContacts.forEach(contact => {
+                contactsHtml += `
+                    <div class="flex items-center justify-between pt-3 first:pt-0 group text-sm">
+                        <div class="leading-relaxed">
+                            <p class="text-xs text-slate-400 font-medium">${contact.role}</p>
+                            <p class="text-sm font-semibold text-slate-200 mt-0.5">${contact.phone}</p>
+                        </div>
+                        <div class="flex items-center space-x-2 opacity-60 group-hover:opacity-100 transition-opacity">
+                            <button onclick="openEditModal('typhoon-contact', '${contact.id}')" class="text-slate-400 hover:text-gold text-xs transition-colors"><i class="fa-solid fa-pencil"></i></button>
+                            <button onclick="deleteItem('typhoon-contact', '${contact.id}')" class="text-slate-500 hover:text-red-400 text-xs transition-colors"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            });
+            contactsContainer.innerHTML = contactsHtml || `<p class="text-xs text-slate-500 italic">暫無緊急聯絡人資料</p>`;
+        }
+
+        function printProcurementOrder() {
+            window.print();
+        }
+    </script>
+</body>
+</html>
+```
+eof
+
+---
+
+### 💡 您的 Google Sheet 1 分鐘極速設定指南：
+
+我已經在代碼中完成了同步機制的無縫對接。現在只需要完成一次性設定，您的系統就會完全連接。步驟如下：
+
+1. **建立 Google 試算表**：
+   * 開啟您的 Google 雲端硬碟，新建一個空白的 **「Google 試算表 (Google Sheet)」**（不需做任何命名或表格調整）。
+2. **複製並貼上同步代碼**：
+   * 在管理系統網頁頂部，點選閃爍的 **「Google Sheet 同步未設定」** 按鈕。
+   * 點選控制台右側的 **「一鍵複製程式碼」**。
+   * 回到剛剛新建的 Google 試算表，點擊上方選單的 **「擴充功能」 -> 「Apps Script」**。
+   * 將裡面的原代碼全部刪除，**直接貼上**剛才複製的同步代碼，然後點擊儲存（磁碟圖示）。
+3. **發布網頁應用程式 (Deploy)**：
+   * 點選 Apps Script 視窗右上角的 **「部署」 -> 「新部署」**。
+   * 點擊左側設定齒輪圖示，選取 **「網頁應用程式 (Web App)」**。
+   * 填寫說明（例如：遊艇系統對接）。
+   * 將「執行身分」選為 **「我 (您的 Google 帳戶)」**。
+   * ⚠️ 將「誰能存取」選為 **「任何人 (Anyone)」**（這樣系統網頁才能向其發送同步請求）。
+   * 點選部署。此時 Google 會提示授予安全存取權限，請點選 **「授權存取」 -> 「進階」 -> 「前往遊艇系統（安全）」** 完成權限允許。
+4. **貼回系統網址**：
+   * 部署成功後，畫面上會出現一串 **「網頁應用程式網址 (Web App URL)」**。
+   * 將其複製，貼回我們系統網頁中 Google Sheet 面板的 **「Google Sheets WebApp 網址 (URL)」** 欄位。
+   * 點選 **「立即上傳同步 (Upload)」**，您的整套遊艇資產、生活物資、出航日誌等數據，就正式完成雲端託管了！
